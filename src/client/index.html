@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Master</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+    <link rel="stylesheet" href="css/jquery-mobile-default-theme.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+    <script src="js/main.js"></script>
+</head>
+<body>
+
+<div id="main-page" data-role="page">
+
+    <div data-role="header">
+        <h1>Main Menu</h1>
+    </div>
+
+    <div data-role="content" data-theme="a">
+        <a href="#settings-page" data-role="button" data-theme="a" data-icon="star">Settings</a>
+        <a href="#account-page" data-rel="dialog" data-transition="pop" data-role="button" data-theme="b" data-icon="star">Account</a>
+        <a href="#tests-page" data-role="button" data-theme="c" data-icon="star">Tests</a>
+
+        <ul data-role="listview" data-inset="true" data-filter="true">
+            <li><a href="#">Acura</a></li>
+            <li><a href="#">Audi</a></li>
+            <li><a href="#">BMW</a></li>
+            <li><a href="#">Cadillac</a></li>
+            <li><a href="#">Ferrari</a></li>
+            <li><a href="#">Cadillac2</a></li>
+            <li><a href="#">Ferrari2</a></li>
+            <li><a href="#">Cadillac3</a></li>
+            <li><a href="#">Ferrari3</a></li>
+        </ul>
+
+        <form>
+            <label for="slider-0">Input slider:</label>
+            <input type="range" name="slider" id="slider-0" value="25" min="0" max="100"  />
+        </form>
+
+
+    </div>
+
+</div>
+
+<div id="account-page" data-role="page">
+    <div data-role="header">
+        <h1>Account</h1>
+    </div>
+
+    <div data-role="content">
+
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
+<div id="settings-page" data-role="page">
+    <div data-role="header">
+        <h1>Settings</h1>
+    </div>
+
+    <div data-role="content">
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+<div id="tests-page" data-role="page">
+    <div data-role="header">
+        <h1>Tests</h1>
+    </div>
+
+    <div data-role="content">
+
+        <ul id="test-list" data-role="listview" data-inset="true" data-filter="true">
+        </ul>
+
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
+<div id="testing-page" data-role="page" >
+    <div data-role="header">
+        <h1>Current test...</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="test-content"></div>
+
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
+</body>
+</html>

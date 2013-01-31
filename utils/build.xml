@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Query Master" default="create">
+
+    <property name="libs.dir" value="../lib" />
+    <property name="build.dir" value="../build" />
+    <property name="src.dir" value="../src" />
+    <property name="java" value="C:/Program Files (x86)/Java/jre6/bin/java" />
+    <property name="yuicompressor.jar" value="${libs.dir}/yuicompressor/yuicompressor-2.4.6.jar" />
+    <property name="clientsourcefiles" value="" />
+
+    <target name="create">
+        <!--  Concatenate all sources -->
+        <concat destfile="${build.dir}/server/public/js/source.js">
+            <filelist dir="${src.dir}/"	files="${clientsourcefiles}" />
+        </concat>
+
+        <apply executable="${java}" parallel="false" >
+            <fileset dir="${build.dir}/server/public/js" includes="source.js" />
+            <arg line="-jar" />
+            <arg path="${yuicompressor.jar}" />
+            <arg line="-o ${build.dir}/server/public/js/source-min.js" />
+            <srcfile />
+        </apply>
+
+    </target>
+
+</project>
