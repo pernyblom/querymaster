@@ -2,31 +2,47 @@
 var idCounter = 1;
 
 var testTemplates = {
-    "simpleMathDualOperation": new SimpleMathDualOperationTemplate()
+    "simpleMathDualOperation": new SimpleMathDualOperationTemplate(),
+    "simpleGlossary": new SimpleGlossaryTemplate()
 };
 
 var testsData = {
     testCollections: [
         {
-            name: "Math",
+            name: "Language",
             tests: [
                 {
-                    name: "Simple Addition",
-                    template: "simpleMathDualOperation",
+                    name: "Glossary I",
+                    template: "simpleGlossary",
                     templateParameters: {
-                        questionCount: 5,
-                        firstDomain: [1, 2, 3, [8, 12]],
-                        secondDomain: [[0, 12], [20, 30]],
-                        operations: ['addition']
+                        pairs: [["horse", "häst"], ["cat", "katt"], ["dog", "hund"], ["bird", "fågel"], ["mouse", "mus"]],
+                        languages: ["English", "Swedish"],
+                        reverse: false,
+                        questionsPerFeedback: 1,
+                        questionCount: 4
                     }
                 }
             ]
         },
         {
-            name: "Math 2",
+            name: "Math",
             tests: [
                 {
-                    name: "Simple Multiplication"
+                    name: "Multiplication",
+                    template: "simpleMathDualOperation",
+                    templateParameters: {
+                        questionCount: 5,
+                        questionsPerFeedback: 2,
+                        firstValueFunction: function(test, operation) {
+                            return Math.round(Math.random() * 9 + 1);
+                        },
+                        secondValueFunction: function(test, operation, firstValue) {
+                            return Math.round(Math.random() * 9 + 1);
+                        },
+                        operations: [
+                            {data: 'multiplication', likelihood: 1}
+                        ]
+                    }
                 },
                 {
                     name: "Addition and Multiplication",

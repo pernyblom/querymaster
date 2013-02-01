@@ -4,6 +4,20 @@ function isArray(obj) {
 }
 
 
+function arrayShuffle(arr, rnd) {
+    for(var r, tmp, i=arr.length; i; r=parseInt(rnd.random()*i), tmp=arr[--i], arr[i]=arr[r], arr[r]=tmp);
+}
+
+function createFilledNumericIncArray(count, element, inc) {
+    var result = [];
+    for (var i=0; i<count; i++) {
+        result.push(element);
+        element += inc;
+    }
+    return result;
+}
+
+
 function getProbabilityDistribution(likelihoods) {
     var result = [];
 
@@ -99,3 +113,13 @@ function sampleIndexIntegerDistribution(rnd, cumulative) {
     return 0; // This should never happen
 }
 
+function arrayCopy(arr) {
+    if (arr) {
+        var result = [];
+        for (var i=0; i<arr.length; i++) {
+            result.push(arr[i]);
+        }
+        return result;
+    }
+    return null;
+}

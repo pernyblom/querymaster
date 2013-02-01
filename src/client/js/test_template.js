@@ -48,3 +48,43 @@ SimpleMathDualOperationTemplate.prototype.getTest = function(templateParams) {
     return result;
 };
 
+
+function SimpleGlossaryTemplate() {
+    TestTemplate.call(this);
+}
+SimpleGlossaryTemplate.prototype = new TestTemplate();
+
+
+
+SimpleGlossaryTemplate.prototype.getTest = function(templateParams) {
+    var result = new FixedLengthTest();
+
+    result.questionsPerFeedback = templateParams.questionsPerFeedback || 1;
+    var questions = [];
+
+    var pairs = templateParams.pairs;
+
+    var questionPairs = [];
+
+    var count = Math.min(templateParams.questionCount, pairs.length);
+
+    var indexArr = createFilledNumericIncArray(pairs.length, 0, 1);
+
+    arrayShuffle(indexArr, Math);
+
+    for (var i=0; i<count; i++) {
+        var q = new SingleTextAnswerQuestion();
+
+        var pair = pairs[indexArr[i]];
+
+        var correct = pair[1];
+        q.inputType = "text";
+        q.correctAnswers.push("" + correct);
+        q.questionTexts = ["Translate '" + pair[0] + "' to " + templateParams.languages[1]];
+        questions.push(q);
+    }
+    result.questions = questions;
+    return result;
+};
+
+
