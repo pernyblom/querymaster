@@ -32,9 +32,13 @@ var testsData = {
                     template: "simpleMathDualOperation",
                     templateParameters: {
                         questionCount: 5,
-                        firstDomain: [1, 2, 3, [8, 12]],
-                        secondDomain: [[0, 12], [20, 30]],
-                        operations: ['addition']
+                        firstValueFunction: function(test, operation) {
+                            return Math.round(Math.random() * 9 + 1);
+                        },
+                        secondValueFunction: function(test, operation, firstValue) {
+                            return Math.round(Math.random() * 9 + 1);
+                        },
+                        operations: [{data: 'multiplication', likelihood: 1}]
                     }
                 }
             ]
@@ -109,19 +113,10 @@ $(document).ready(function() {
             return;
         }
 
+        var $testContent = $("#test-content");
+        test.runTest($testContent, function(err) {
 
-        function updateTestingPage() {
-            var $testContent = $("#test-content");
-            $testContent.empty();
-            var htmlArr = [];
-            test.getHtml(htmlArr);
-
-            $testContent.append($(htmlArr.join("")));
-
-            test.initializeInDom($testContent);
-
-        }
-        updateTestingPage();
+        });
     }
 
     $testingPage.on('pagebeforeshow', function(evt, data) {
