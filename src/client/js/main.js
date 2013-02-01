@@ -28,17 +28,32 @@ var testsData = {
                     name: "Simple Multiplication"
                 },
                 {
-                    name: "Simple Addition",
+                    name: "Addition and Multiplication",
                     template: "simpleMathDualOperation",
                     templateParameters: {
                         questionCount: 5,
                         firstValueFunction: function(test, operation) {
-                            return Math.round(Math.random() * 9 + 1);
+                            switch (operation) {
+                                case 'addition':
+                                    return Math.round(Math.random() * 99 + 1);
+                                case 'multiplication':
+                                    return Math.round(Math.random() * 9 + 1);
+                            }
+                            return 1;
                         },
                         secondValueFunction: function(test, operation, firstValue) {
-                            return Math.round(Math.random() * 9 + 1);
+                            switch (operation) {
+                                case 'addition':
+                                    return Math.round(Math.random() * 99 + 1);
+                                case 'multiplication':
+                                    return Math.round(Math.random() * 9 + 1);
+                            }
+                            return 1;
                         },
-                        operations: [{data: 'multiplication', likelihood: 1}]
+                        operations: [
+                            {data: 'multiplication', likelihood: 1},
+                            {data: 'addition', likelihood: 1}
+                        ]
                     }
                 }
             ]

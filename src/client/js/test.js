@@ -30,16 +30,19 @@ Test.prototype.refreshContent = function($aParent) {
     var htmlArr = [];
     this.getHtml(htmlArr);
     $aParent.append(htmlArr.join(""));
+    this.initializeInDom($aParent);
 };
 
 
 
-function FixedLengthTest(questions) {
+function FixedLengthTest() {
     Test.call(this);
-    this.questions = questions;
+    this.questions = [];
     this.showTestInfo = true;
     this.testInfoHtml = "Info about test goes here...";
     this.questionIndex = -1;
+    this.showingFeedback = false;
+    this.answerInfo = null;
     this.correctFraction = 0;
     this.totalFraction = 0;
 }
@@ -47,12 +50,21 @@ FixedLengthTest.prototype = new Test();
 
 
 FixedLengthTest.prototype.getHtml = function(arr) {
-    if (this.questionIndex == -1) {
+    if (this.showingFeedback) {
+        arr.push(
+            '<div data-role="content">',
+            this.answerInfo.badFeedbackContent,
+            this.answerInfo.goodFeedbackContent,
+            this.answerInfo.warningFeedbackContent,
+            '<a href="#" id="feedback-ok-button" data-role="button">OK</a>',
+            '</div>'
+        );
+    } else if (this.questionIndex == -1) {
         arr.push(
             '<div data-role="content">',
             this.testInfoHtml,
-            '</div>',
-            '<button id="test-start-button" data-role="button">Start!</button>'
+            '<a href="#" id="test-start-button" data-role="button">Start!</a>',
+            '</div>'
         );
     } else if (this.questionIndex < this.questions.length) {
         var q = this.questions[this.questionIndex];
@@ -60,7 +72,7 @@ FixedLengthTest.prototype.getHtml = function(arr) {
     } else {
         arr.push(
             '<div data-role="content">',
-            'Test results goes here...',
+            'Percent correct: ' + Math.round((this.correctFraction / this.totalFraction) * 100),
             '</div>'
         );
     }
@@ -69,15 +81,28 @@ FixedLengthTest.prototype.getHtml = function(arr) {
 FixedLengthTest.prototype.initializeInDom = function($aParent) {
     $aParent.trigger("create");
     var test = this;
-    if (this.questionIndex == -1) {
+    if (this.showingFeedback) {
+        $aParent.find("#feedback-ok-button").click(function() {
+            test.questionIndex++;
+            test.showingFeedback = false;
+            test.refreshContent($aParent);
+        });
+    } else if (this.questionIndex == -1) {
         $aParent.find("#test-start-button").click(function() {
             console.log("Starting test...");
             test.questionIndex = 0;
-            test.refreshContent();
+            test.refreshContent($aParent);
         });
     } else if (this.questionIndex < this.questions.length) {
         var q = this.questions[this.questionIndex];
         q.initializeInDom($aParent);
+        q.answerCallback = function(answerInfo) {
+            test.showingFeedback = true;
+            test.answerInfo = answerInfo;
+            test.correctFraction += answerInfo.correctFraction;
+            test.totalFraction += 1;
+            test.refreshContent($aParent);
+        };
     } else {
     }
 };
