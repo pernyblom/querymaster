@@ -16,6 +16,8 @@ SimpleMathDualOperationTemplate.prototype = new TestTemplate();
 
 SimpleMathDualOperationTemplate.prototype.getTest = function(templateParams) {
     var result = new FixedLengthTest();
+
+    result.questionsPerFeedback = templateParams.questionsPerFeedback || 1;
     var questions = [];
     for (var i=0; i<templateParams.questionCount; i++) {
         var q = new SingleTextAnswerQuestion();
@@ -39,7 +41,7 @@ SimpleMathDualOperationTemplate.prototype.getTest = function(templateParams) {
         }
         q.inputType = "number";
         q.correctAnswers.push("" + correct);
-        q.questionHtml = "<h2>" + first + " " + opStr + " " + second + "</h2>";
+        q.questionTexts = [first + " " + opStr + " " + second];
         questions.push(q);
     }
     result.questions = questions;

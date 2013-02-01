@@ -1,4 +1,5 @@
 
+var idCounter = 1;
 
 var testTemplates = {
     "simpleMathDualOperation": new SimpleMathDualOperationTemplate()
@@ -32,6 +33,7 @@ var testsData = {
                     template: "simpleMathDualOperation",
                     templateParameters: {
                         questionCount: 5,
+                        questionsPerFeedback: 2,
                         firstValueFunction: function(test, operation) {
                             switch (operation) {
                                 case 'addition':

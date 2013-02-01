@@ -12,49 +12,54 @@ Question.prototype.initializeInDom = function($aParent) {
 
 function SingleTextAnswerQuestion() {
     Question.call(this);
-    this.questionHtml = "";
+    this.questionTexts = [];
     this.answerCallback = null;
     this.correctAnswers = [];
-    this.inputType = "text"
+    this.inputType = "text";
+    this.questionTextsTag = "p";
+    this.$questionInput = null;
+    this.questionInputId = "";
 }
 SingleTextAnswerQuestion.prototype = new Question();
 
 SingleTextAnswerQuestion.prototype.getHtml = function(arr) {
-    arr.push(this.questionHtml);
-    arr.push('<input type="' + this.inputType + '" id="question-input" />');
-    arr.push('<button id="answer-button" data-role="button" >Answer</button>')
+    for (var i=0; i<this.questionTexts.length; i++) {
+        var t = this.questionTexts[i];
+        arr.push('<' + this.questionTextsTag + ' >', t, '</' + this.questionTextsTag + '>');
+    }
+    this.questionInputId = 'question-input-' + idCounter++;
+    arr.push('<input type="' + this.inputType + '" id="' + this.questionInputId + '" />');
 }
 
-SingleTextAnswerQuestion.prototype.initializeInDom = function($aParent) {
-    var $answerButton = $aParent.find("#answer-button");
-    var $questionInput = $aParent.find("#question-input");
+SingleTextAnswerQuestion.prototype.evaluateAnswer = function($aParent) {
+    var answerValue = this.$questionInput.val();
     var that = this;
-    $answerButton.trigger("create").click(function() {
-        console.log("Answer clicked...");
-        var answerValue = $questionInput.val();
-        var index = that.correctAnswers.indexOf(answerValue.trim());
-        if (index >= 0) {
-            console.log("Correct answer! " + answerValue);
-        } else {
-            console.log("Not correct answer: " + answerValue + " among: " + that.correctAnswers.join(""));
+    var index = that.correctAnswers.indexOf(answerValue.trim());
+    if (index >= 0) {
+        console.log("Correct answer! " + answerValue);
+    } else {
+        console.log("Not correct answer: " + answerValue + " among: " + that.correctAnswers.join(""));
+    }
+    var answerInfo = new AnswerInfo();
+    var correct = index >= 0;
+    answerInfo.correctFraction = correct ? 1 : 0;
+
+    var feedback = "Question: " + this.questionTexts.join(" ") + ".";
+    if (correct) {
+        answerInfo.goodFeedbackContent = feedback + " You answered '" + answerValue + "' and that was correct!";
+    } else {
+        answerInfo.badFeedbackContent = feedback + " The answer '" + answerValue + "' was not correct. ";
+        if (that.correctAnswers.length == 1) {
+            answerInfo.badFeedbackContent += "The correct answer was: " + that.correctAnswers[0];
+        } else if (that.correctAnswers.length > 1) {
+            answerInfo.badFeedbackContent += "Possible correct answers: " + that.correctAnswers.join(", ");
         }
-        if (that.answerCallback) {
-            var answerInfo = new AnswerInfo();
-            var correct = index >= 0;
-            answerInfo.correctFraction = correct ? 1 : 0;
-            if (correct) {
-                answerInfo.goodFeedbackContent = "Correct!";
-            } else {
-                answerInfo.badFeedbackContent = "The answer '" + answerValue + "' was not correct. ";
-                if (that.correctAnswers.length == 1) {
-                    answerInfo.badFeedbackContent += "The correct answer was: " + that.correctAnswers[0];
-                } else if (that.correctAnswers.length > 1) {
-                    answerInfo.badFeedbackContent += "Possible correct answers: " + that.correctAnswers.join(", ");
-                }
-            }
-            that.answerCallback(answerInfo);
-        }
-    });
+    }
+    return answerInfo;
+};
+
+SingleTextAnswerQuestion.prototype.initializeInDom = function($aParent) {
+    this.$questionInput = $aParent.find("#" + this.questionInputId);
 }
 
 

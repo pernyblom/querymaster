@@ -41,8 +41,9 @@ function FixedLengthTest() {
     this.showTestInfo = true;
     this.testInfoHtml = "Info about test goes here...";
     this.questionIndex = -1;
+    this.questionsPerFeedback = 1;
     this.showingFeedback = false;
-    this.answerInfo = null;
+    this.answerInfos = [];
     this.correctFraction = 0;
     this.totalFraction = 0;
 }
@@ -52,10 +53,19 @@ FixedLengthTest.prototype = new Test();
 FixedLengthTest.prototype.getHtml = function(arr) {
     if (this.showingFeedback) {
         arr.push(
-            '<div data-role="content">',
-            this.answerInfo.badFeedbackContent,
-            this.answerInfo.goodFeedbackContent,
-            this.answerInfo.warningFeedbackContent,
+            '<div data-role="content">'
+        );
+        for (var i=0; i<this.answerInfos.length; i++) {
+            var answerInfo = this.answerInfos[i];
+            arr.push(
+                '<p>',
+                answerInfo.badFeedbackContent,
+                answerInfo.goodFeedbackContent,
+                answerInfo.warningFeedbackContent,
+                '</p>'
+            );
+        }
+        arr.push(
             '<a href="#" id="feedback-ok-button" data-role="button">OK</a>',
             '</div>'
         );
@@ -67,8 +77,11 @@ FixedLengthTest.prototype.getHtml = function(arr) {
             '</div>'
         );
     } else if (this.questionIndex < this.questions.length) {
-        var q = this.questions[this.questionIndex];
-        q.getHtml(arr);
+        for (var i=this.questionIndex; i<Math.min(this.questions.length, this.questionIndex + this.questionsPerFeedback); i++) {
+            var q = this.questions[i];
+            q.getHtml(arr);
+        }
+        arr.push('<button id="answer-button" data-role="button" >Answer</button>');
     } else {
         arr.push(
             '<div data-role="content">',
@@ -80,29 +93,42 @@ FixedLengthTest.prototype.getHtml = function(arr) {
 
 FixedLengthTest.prototype.initializeInDom = function($aParent) {
     $aParent.trigger("create");
-    var test = this;
+    var that = this;
     if (this.showingFeedback) {
         $aParent.find("#feedback-ok-button").click(function() {
-            test.questionIndex++;
-            test.showingFeedback = false;
-            test.refreshContent($aParent);
+            that.questionIndex += that.questionsPerFeedback;
+            that.showingFeedback = false;
+            that.refreshContent($aParent);
         });
     } else if (this.questionIndex == -1) {
         $aParent.find("#test-start-button").click(function() {
             console.log("Starting test...");
-            test.questionIndex = 0;
-            test.refreshContent($aParent);
+            that.questionIndex = 0;
+            that.refreshContent($aParent);
         });
     } else if (this.questionIndex < this.questions.length) {
-        var q = this.questions[this.questionIndex];
-        q.initializeInDom($aParent);
-        q.answerCallback = function(answerInfo) {
-            test.showingFeedback = true;
-            test.answerInfo = answerInfo;
-            test.correctFraction += answerInfo.correctFraction;
-            test.totalFraction += 1;
-            test.refreshContent($aParent);
-        };
+        var questionCount = 0;
+        for (var i=this.questionIndex; i<Math.min(this.questions.length, this.questionIndex + this.questionsPerFeedback); i++) {
+            var q = this.questions[i];
+            q.initializeInDom($aParent);
+            questionCount++;
+        }
+
+        var $answerButton = $aParent.find("#answer-button");
+        $answerButton.trigger("create").click(function() {
+            that.answerInfos = [];
+            for (var i=0; i<questionCount; i++) {
+                var q = that.questions[i + that.questionIndex];
+                var answerInfo = q.evaluateAnswer();
+                that.answerInfos.push(answerInfo);
+                that.correctFraction += answerInfo.correctFraction;
+                that.totalFraction += 1;
+            }
+            that.showingFeedback = true;
+            that.refreshContent($aParent);
+        });
+
+
     } else {
     }
 };
