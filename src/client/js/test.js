@@ -1,6 +1,10 @@
 
 function Test() {
 }
+Test.prototype.getHtml = function(arr) {
+};
+Test.prototype.initializeInDom = function($aParent) {
+};
 Test.prototype.hasMoreQuestions = function() {
     return false;
 };
@@ -22,6 +26,8 @@ Test.prototype.evaluateAnswer = function(question) {
 function FixedLengthTest(questions) {
     Test.call(this);
     this.questions = questions;
+    this.showTestInfo = true;
+    this.testInfoHtml = "";
     this.questionIndex = 0;
     this.correctFraction = 0;
     this.totalFraction = 0;
