@@ -1,9 +1,36 @@
 
-function TestTemplate() {
+var TestTemplateParameterType = {
+    INTEGER: 0,
+    DECIMAL: 1,
+    BOOLEAN: 2,
+    RANGED_INTEGER: 3,
+    RANGED_DECIMAL: 4,
+    ENUMERATED_INTEGER: 5,
+    ENUMERATED_DECIMAL: 6,
+    STRING: 7,
+    ENUMERATED_STRING: 8,
+    INTEGER_RANGE: 9,
+    DECIMAL_RANGE: 10
+};
 
+function TestTemplateParameter() {
+    this.name = "parameter name";
+    this.type = TestTemplateParameterType.INTEGER;
+    this.verifiers = [];
+    this.defaultValue = 0; // Can be anything
+    this.data = null; // Can describe range, enumerations etc.
+}
+
+
+function TestTemplate() {
+    this.parameters = [];
 }
 TestTemplate.prototype.getTest = function(templateParams) {
     return new Test();
+};
+
+TestTemplate.prototype.getParameters = function() {
+    return this.parameters;
 };
 
 
