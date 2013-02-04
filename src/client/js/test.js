@@ -237,11 +237,7 @@ FixedLengthTest.prototype.initializeQuestionsInDom = function($aParent) {
             that.correctFraction += answerInfo.correctFraction;
             that.totalFraction += 1;
         }
-        if (that.questionIndex + that.questionsPerScreen < that.questions.length) {
-            that.state = TestState.FEEDBACK;
-        } else {
-            that.state = TestState.RESULT;
-        }
+        that.state = TestState.FEEDBACK;
         that.refreshContent($aParent);
     });
 };
@@ -251,7 +247,11 @@ FixedLengthTest.prototype.initializeFeedbackInDom = function($aParent) {
     var that = this;
     $aParent.find("#feedback-ok-button").click(function() {
         that.questionIndex += that.questionsPerScreen;
-        that.state = TestState.QUESTIONS;
+        if (that.hasMoreQuestions()) {
+            that.state = TestState.QUESTIONS;
+        } else {
+            that.state = TestState.RESULT;
+        }
         that.refreshContent($aParent);
     });
 };

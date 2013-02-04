@@ -30,7 +30,7 @@
 
     <div data-role="content" data-theme="a">
         <a href="#settings-page" data-role="button" data-theme="a" data-icon="star">Settings</a>
-        <a href="#account-page" data-role="button" data-theme="b" data-icon="star">Account</a>
+        <a id="account-button" href="#account-page" data-role="button" data-theme="b" data-icon="star">Account</a>
         <a href="#tests-collections-page" data-role="button" data-theme="c" data-icon="star">Tests</a>
 
         <form>
@@ -66,19 +66,24 @@
 
 <div id="tests-collections-page" data-role="page" class="normal-page">
     <div data-role="header">
-        <h1>Test Collections</h1>
+        <h1>Tests</h1>
+    </div>
+
+    <div data-role="content" class="ui-grid-b">
+        <div class="ui-block-a"><a href="#edit-tests-page" data-role="button" data-icon="gear">Edit</a></div>
+        <div class="ui-block-b"><a href="#new-category-page" data-role="button" data-icon="plus">New Category</a></div>
+        <div class="ui-block-c"><a href="#new-test-page" data-role="button" data-icon="plus">New Test</a></div>
     </div>
 
     <div data-role="content">
-        <div id="test-collections" data-role="collapsible-set" >
-        </div>
+        <div id="test-collections" data-role="collapsible-set" ></div>
         <a href="#main-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
 
 
 <div id="testing-page" data-role="page" class="normal-page">
-    <div data-role="header">
+    <div id="testing-page-header" data-role="header">
         <h1>Current test...</h1>
     </div>
 

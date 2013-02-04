@@ -1,7 +1,9 @@
 
 
-function TestTemplate() {
+function TestTemplate(name) {
+    this.name = name;
     this.parameters = [];
+    this.initialized = false;
 }
 TestTemplate.prototype.getTest = function(parameterValues) {
     return new Test(this, parameterValues);
@@ -9,96 +11,56 @@ TestTemplate.prototype.getTest = function(parameterValues) {
 TestTemplate.prototype.addQuestions = function(test, templateParams) {
 };
 
+TestTemplate.prototype.initialize = function(callback) {
+    if (!this.initialized) {
+        // Do things like load resources etc. here
+
+        // ... and then do the following when done:
+        this.initialized = true;
+        if (callback) {
+            callback(null); // Send any error through the callback
+        }
+    } else {
+        if (callback) {
+            callback(null);
+        }
+    }
+};
+
+
+TestTemplate.prototype.getOrCreateValueFunctionIfNecessary = function(funcName, params) {
+    var func = params[funcName];
+    if (!func) {
+        var def = params[funcName + "Def"];
+        if (def) {
+            try {
+                if (isArray(def)) {
+                    def = def.join("");
+                }
+                func = eval("var temp = " + def + "; temp;");
+            } catch (exc) {
+                console.log("Error when evaluating value function definition " + funcName);
+                console.log(def);
+                console.log(exc);
+                func = function() {
+                    return 0;
+                }
+            }
+        } else {
+            console.log("Could not find function for first value...");
+            func = function() {
+                return 0;
+            }
+        }
+        params[funcName] = func;
+    }
+    return func;
+}
+
+
 
 TestTemplate.prototype.getParameters = function() {
     return this.parameters;
 };
-
-
-function SimpleMathDualOperationTemplate() {
-    TestTemplate.call(this);
-}
-SimpleMathDualOperationTemplate.prototype = new TestTemplate();
-
-
-SimpleMathDualOperationTemplate.prototype.addQuestions = function(test, templateParams) {
-    test.questionsPerScreen = templateParams.questionsPerScreen || 1;
-
-    var questions = [];
-    for (var i=0; i<templateParams.questionCount; i++) {
-        var q = new SingleTextAnswerQuestion();
-
-        var operation = sampleData(templateParams.operations, Math);
-
-        var first = templateParams.firstValueFunction(test, operation);
-        var second = templateParams.secondValueFunction(test, operation, first);
-
-        var correct = "";
-        var opStr = "";
-        switch (operation) {
-            case 'addition':
-                correct = first + second;
-                opStr = "+";
-                break;
-            case 'multiplication':
-                correct = first * second;
-                opStr = "*";
-                break;
-        }
-        q.inputType = "number";
-        q.correctAnswers.push("" + correct);
-        q.questionTexts = [first + " " + opStr + " " + second];
-        questions.push(q);
-    }
-    test.questions = questions;
-};
-
-SimpleMathDualOperationTemplate.prototype.getTest = function(parameterValues) {
-    var result = new FixedLengthTest(this, parameterValues);
-    return result;
-};
-
-
-function SimpleGlossaryTemplate() {
-    TestTemplate.call(this);
-}
-SimpleGlossaryTemplate.prototype = new TestTemplate();
-
-
-SimpleGlossaryTemplate.prototype.addQuestions = function(test, parameterValues) {
-    test.questionsPerScreen = parameterValues.questionsPerScreen || 1;
-    var questions = [];
-
-    var pairs = parameterValues.pairs;
-
-    var questionPairs = [];
-
-    var count = Math.min(parameterValues.questionCount, pairs.length);
-
-    var indexArr = createFilledNumericIncArray(pairs.length, 0, 1);
-
-    arrayShuffle(indexArr, Math);
-
-    for (var i=0; i<count; i++) {
-        var q = new SingleTextAnswerQuestion();
-
-        var pair = pairs[indexArr[i]];
-
-        var correct = pair[1];
-        q.inputType = "text";
-        q.correctAnswers.push("" + correct);
-        q.questionTexts = ["Translate '" + pair[0] + "' to " + parameterValues.languages[1]];
-        questions.push(q);
-    }
-    test.questions = questions;
-};
-
-SimpleGlossaryTemplate.prototype.getTest = function(parameterValues) {
-    var result = new FixedLengthTest(this, parameterValues);
-
-    return result;
-};
-
-
 
 

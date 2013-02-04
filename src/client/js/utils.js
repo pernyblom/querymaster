@@ -123,3 +123,69 @@ function arrayCopy(arr) {
     }
     return null;
 }
+
+
+
+
+var isValidFunctionName = function() {
+    var validName = /^[$A-Z_][0-9A-Z_$]*$/i;
+    var reserved = {
+        'abstract':true,
+        'boolean':true,
+        // ...
+        'with':true
+    };
+    return function(s) {
+        // Ensure a valid name and not reserved.
+        return validName.test(s) && !reserved[s];
+    };
+}();
+
+
+function copyObjectPropertiesDeep(copy, source, options) {
+    for (var propName in source) {
+        var value = source[propName];
+        if (! (typeof(value) === 'function')) {
+            copy[propName] = copyValueDeep(value, source, options);
+        } else {
+            copy[propName] = value;
+        }
+    }
+}
+
+
+function copyObjectDeep(obj, options) {
+    if (typeof(obj) === 'undefined' || obj == null) {
+        return obj;
+    }
+    var copy = null;
+    if (!obj._constructorName) {
+        copy = {};
+    } else {
+        if (isValidFunctionName(obj._constructorName)) {
+            copy = eval("new " + obj._constructorName + "()");
+        } else {
+            copy = {};
+        }
+    }
+    copyObjectPropertiesDeep(copy, obj, options);
+
+    return copy;
+}
+
+
+function copyValueDeep(value, options) {
+    if (isArray(value)) {
+        var result = [];
+        for (var i=0; i<value.length; i++) {
+            result[i] = copyValueDeep(value[i], options);
+        }
+        return result;
+    } else if (typeof(value) === 'function') {
+        return value;
+    } else if (typeof(value) === 'object') {
+        return copyObjectDeep(value, options);
+    } else {
+        return value;
+    }
+}
