@@ -29,15 +29,9 @@
     </div>
 
     <div data-role="content" data-theme="a">
-        <a href="#settings-page" data-role="button" data-theme="a" data-icon="star">Settings</a>
-        <a id="account-button" href="#account-page" data-role="button" data-theme="b" data-icon="star">Account</a>
-        <a href="#tests-collections-page" data-role="button" data-theme="c" data-icon="star">Tests</a>
-
-        <form>
-            <label for="slider-0">Input slider:</label>
-            <input type="range" name="slider" id="slider-0" value="25" min="0" max="100"  />
-        </form>
-
+        <a href="#tests-collections-page" data-role="button" data-theme="c" >Tests</a>
+        <a href="#settings-page" data-role="button" data-theme="a" >Settings</a>
+        <a id="account-button" href="#account-page" data-role="button" data-theme="b" >Account</a>
     </div>
 
 </div>
@@ -69,10 +63,14 @@
         <h1>Tests</h1>
     </div>
 
-    <div data-role="content" class="ui-grid-b">
-        <div class="ui-block-a"><a href="#edit-tests-page" data-role="button" data-icon="gear">Edit</a></div>
-        <div class="ui-block-b"><a href="#new-category-page" data-role="button" data-icon="plus">New Category</a></div>
-        <div class="ui-block-c"><a href="#new-test-page" data-role="button" data-icon="plus">New Test</a></div>
+    <div data-role="content" class="ui-grid-a">
+        <div class="ui-block-a">
+            <a href="#edit-tests-page" data-role="button" data-mini="true" data-icon="gear">Edit</a>
+        </div>
+        <div class="ui-block-b">
+            <a href="#new-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
+            <a href="#new-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
+        </div>
     </div>
 
     <div data-role="content">
@@ -81,11 +79,54 @@
     </div>
 </div>
 
+<div id="new-test-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Create New Test</h1>
+    </div>
+
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="new-test-category" >Category</label>
+            <select id="new-test-category">
+                <option>Cat 1</option>
+            </select>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="new-test-template" >Template</label>
+            <select id="new-test-template">
+                <option>Template 1</option>
+            </select>
+        </div>
+        <a href="#new-test-parameters-page" data-role="button" >Next</a>
+    </div>
+
+    <div data-role="content">
+        <a href="#tests-collections-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
+<div id="new-test-parameters-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>New Test Parameters</h1>
+    </div>
+
+    <div id="new-test-parameters-div" data-role="content">
+    </div>
+
+    <div data-role="content">
+        <a href="#new-test-confirm-page" data-role="button" >Create Test</a>
+        <a href="#new-test-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
 
 <div id="testing-page" data-role="page" class="normal-page">
     <div id="testing-page-header" data-role="header">
         <h1>Current test...</h1>
     </div>
+
 
     <div data-role="content">
         <div id="test-content" data-role="content"></div>
