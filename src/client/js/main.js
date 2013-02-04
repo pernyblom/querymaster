@@ -14,11 +14,11 @@ var testsData = {
                 {
                     name: "Glossary I",
                     template: "simpleGlossary",
-                    templateParameters: {
+                    parameterValues: {
                         pairs: [["horse", "häst"], ["cat", "katt"], ["dog", "hund"], ["bird", "fågel"], ["mouse", "mus"]],
                         languages: ["English", "Swedish"],
                         reverse: false,
-                        questionsPerFeedback: 1,
+                        questionsPerScreen: 1,
                         questionCount: 4
                     }
                 }
@@ -30,9 +30,9 @@ var testsData = {
                 {
                     name: "Multiplication",
                     template: "simpleMathDualOperation",
-                    templateParameters: {
+                    parameterValues: {
                         questionCount: 5,
-                        questionsPerFeedback: 2,
+                        questionsPerScreen: 2,
                         firstValueFunction: function(test, operation) {
                             return Math.round(Math.random() * 9 + 1);
                         },
@@ -47,9 +47,8 @@ var testsData = {
                 {
                     name: "Addition and Multiplication",
                     template: "simpleMathDualOperation",
-                    templateParameters: {
+                    parameterValues: {
                         questionCount: 5,
-                        questionsPerFeedback: 2,
                         firstValueFunction: function(test, operation) {
                             switch (operation) {
                                 case 'addition':
@@ -138,10 +137,10 @@ $(document).ready(function() {
             return;
         }
 
-        var test = testTemplate.getTest(currentTestInfo.templateParameters);
+        var test = testTemplate.getTest(currentTestInfo.parameterValues);
         if (!test) {
             console.log("Unable to create test with parameters:");
-            console.log(currentTestInfo.templateParameters);
+            console.log(currentTestInfo.parameterValues);
             console.log("With test template: " + currentTestInfo.template);
             return;
         }
