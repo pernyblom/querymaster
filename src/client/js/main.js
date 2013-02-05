@@ -13,7 +13,7 @@ function loadTestTemplate(templateInfo) {
                     $.globalEval(jqXhr.responseText);
                     var constrFunc = getGlobalFunction(templateInfo.constructorName);
                     if (constrFunc) {
-                        var template = new constrFunc(templateInfo.name);
+                        var template = new constrFunc();
                         template.initialize(function(err) {
                             if (!err) {
                                 testTemplates.push(template);
@@ -58,16 +58,7 @@ function initNotKnowServer() {
 
 }
 
-function initKnowWhetherServer(found) {
-
-    // Loading tests
-
-    console.log("Initializing know whether server");
-
-    // If server isn't present, we can not log in
-    if (!found) {
-        $("#account-button").remove();
-    }
+function initTestsPage(serverFound) {
 
     var $testsCollectionsPage = $("#tests-collections-page");
     $testsCollectionsPage.on('pagebeforeshow', function(evt, data) {
@@ -106,22 +97,33 @@ function initKnowWhetherServer(found) {
         });
 
     });
+}
 
-
+function initEditTestsPage(serverFound) {
 
     var $editTestsPage = $("#edit-tests-page");
     $editTestsPage.on('pagebeforeshow', function(evt, data) {
 
         var htmlArr = [];
 
+        htmlArr.push(
+            '<h4>Test categories:</h4>'
+        );
+
         var collections = testsData.testCollections;
         for (var i=0; i<collections.length; i++) {
             var collection = collections[i];
             htmlArr.push('<div data-role="collapsible" >');
             htmlArr.push('<h3>' + collection.name,
-//                '<span class="ui-li-count">', collection.tests.length,
-//                '</span>',
-                '</h3>');
+                '</h3>'
+            );
+            htmlArr.push(
+                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Rename "' + collection.name + '"</a>',
+                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Delete "' + collection.name + '"</a>'
+            );
+            htmlArr.push(
+                '<h4>Tests in category "' + collection.name + '":</h4>'
+            );
 //            htmlArr.push('<ul data-role="listview" >');
             for (var j=0; j<collection.tests.length; j++) {
                 var test = collection.tests[j];
@@ -145,8 +147,9 @@ function initKnowWhetherServer(found) {
     });
 
 
+}
 
-
+function initTestingPage(serverFound) {
     var $testingPage = $("#testing-page");
 
     function initTest() {
@@ -181,6 +184,79 @@ function initKnowWhetherServer(found) {
     $testingPage.on('pagebeforeshow', function(evt, data) {
         initTest();
     });
+
+}
+
+function initNewTestPage(serverFound) {
+
+    var $newTestPage = $("#new-test-page");
+
+    $newTestPage.on('pagebeforeshow', function(evt, data) {
+
+
+        var $newTestContent = $("#new-test-content");
+        $newTestContent.empty();
+
+
+        var htmlArr = [];
+
+        // Category select
+        htmlArr.push(
+            '<div data-role="fieldcontain">',
+            '<label for="new-test-category-select" >Category</label>',
+            '<select id="new-test-category-select">'
+        );
+
+        var collections = testsData.testCollections;
+        for (var i=0; i<collections.length; i++) {
+            var collection = collections[i];
+            htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+        }
+
+        htmlArr.push('</select>', '</div>');
+
+        // Template select
+        htmlArr.push(
+            '<div data-role="fieldcontain">',
+            '<label for="new-test-template-select" >Template</label>',
+            '<select id="new-test-template-select">'
+        );
+
+        for (var i=0; i<testTemplates.length; i++) {
+            var t = testTemplates[i];
+            htmlArr.push('<option value="' + t._constructorName + '">', t.displayName, '</option>')
+        }
+
+        htmlArr.push('</select>', '</div>');
+
+
+        $newTestContent.append($(htmlArr.join("")));
+
+        $newTestContent.trigger("create");
+    });
+
+
+}
+
+
+function initKnowWhetherServer(found) {
+
+    // Loading tests
+
+    console.log("Initializing know whether server");
+
+    // If server isn't present, we can not log in
+    if (!found) {
+        $("#account-button").remove();
+    }
+
+    initTestsPage(found);
+
+    initEditTestsPage(found);
+
+    initTestingPage(found);
+
+    initNewTestPage(found);
 
 }
 

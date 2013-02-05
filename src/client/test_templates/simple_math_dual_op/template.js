@@ -1,5 +1,6 @@
-function SimpleMathDualOperationTemplate(name) {
-    TestTemplate.call(this, name);
+function SimpleMathDualOperationTemplate() {
+    TestTemplate.call(this, "Simple Math Dual Operation");
+    this._constructorName = "SimpleMathDualOperationTemplate";
 }
 SimpleMathDualOperationTemplate.prototype = new TestTemplate();
 

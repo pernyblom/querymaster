@@ -9,7 +9,7 @@ var testsData = {
             tests: [
                 {
                     name: "Glossary I",
-                    template: "simpleGlossary",
+                    template: "SimpleGlossaryTemplate",
                     parameterValues: {
                         pairs: [["horse", "häst"], ["cat", "katt"], ["dog", "hund"], ["bird", "fågel"], ["mouse", "mus"]],
                         languages: ["English", "Swedish"],
@@ -23,7 +23,7 @@ var testsData = {
             tests: [
                 {
                     name: "Multiplication",
-                    template: "simpleMathDualOperation",
+                    template: "SimpleMathDualOperationTemplate",
                     parameterValues: {
                         firstValueFunctionDef: [
                             'function(test, operation) {',
@@ -39,13 +39,15 @@ var testsData = {
                             {data: 'multiplication', likelihood: 1}
                         ],
                         timer: true,
+                        statistics: true,
+                        statisticsData: {},
                         highScore: true,
                         highScoreData: {id: "mathMultiplicationHighScore1"}
                     }
                 },
                 {
                     name: "Addition and Multiplication",
-                    template: "simpleMathDualOperation",
+                    template: "SimpleMathDualOperationTemplate",
                     parameterValues: {
                         firstValueFunctionDef: [
                             'function(test, operation) {',
@@ -94,7 +96,7 @@ function findServer() {
 function findTemplate(name) {
     for (var i=0; i<testTemplates.length; i++) {
         var t = testTemplates[i];
-        if (t.name == name) {
+        if (t._constructorName == name) {
             return t;
         }
     }

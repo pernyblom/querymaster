@@ -1,6 +1,6 @@
 {
     "templates": [
-        {"path": "simple_glossary", "constructorName": "SimpleGlossaryTemplate", "name": "simpleGlossary"},
-        {"path": "simple_math_dual_op", "constructorName": "SimpleMathDualOperationTemplate", "name": "simpleMathDualOperation"}
+        {"path": "simple_glossary", "constructorName": "SimpleGlossaryTemplate"},
+        {"path": "simple_math_dual_op", "constructorName": "SimpleMathDualOperationTemplate"}
     ]
 }

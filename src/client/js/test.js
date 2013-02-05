@@ -137,7 +137,7 @@ Test.prototype.getParameterValues = function(params, $aParent) {
         if (!this.parameterValues[param.propertyName]) {
             var value = param.getValue($aParent);
             this.parameterValues[param.propertyName] = value;
-            console.log("Setting parameter " + param.propertyName + " to " + value);
+//            console.log("Setting parameter " + param.propertyName + " to " + value);
         }
     }
 };
@@ -147,9 +147,11 @@ Test.prototype.getParameterValues = function(params, $aParent) {
 Test.prototype.startTest = function($aParent) {
     // Fill parameter values from test
     var tParams = this.template.getParameters();
+    var tdParams = this.template.getDataParameters();
     var params = this.getParameters();
 
     this.getParameterValues(tParams, $aParent);
+    this.getParameterValues(tdParams, $aParent);
     this.getParameterValues(params, $aParent);
 
     this.template.addQuestions(this, this.parameterValues);

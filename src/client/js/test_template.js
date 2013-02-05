@@ -1,8 +1,9 @@
 
 
-function TestTemplate(name) {
-    this.name = name;
-    this.parameters = [];
+function TestTemplate(displayName) {
+    this.displayName = displayName;
+    this.parameters = []; // Shown before running test if not already set.
+    this.dataParameters = []; // Not shown before running test. Used for glossary strings etc. Shown when test is edited
     this.initialized = false;
 }
 TestTemplate.prototype.getTest = function(parameterValues) {
@@ -62,5 +63,10 @@ TestTemplate.prototype.getOrCreateValueFunctionIfNecessary = function(funcName, 
 TestTemplate.prototype.getParameters = function() {
     return this.parameters;
 };
+
+TestTemplate.prototype.getDataParameters = function() {
+    return this.dataParameters;
+};
+
 
 
