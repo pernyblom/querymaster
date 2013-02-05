@@ -17,6 +17,7 @@
     <script src="js/test_parameter.js"></script>
     <script src="js/test.js"></script>
     <script src="js/test_template.js"></script>
+    <script src="js/globals.js"></script>
     <script src="js/main.js"></script>
     <!-- minify end 1 -->
 </head>
@@ -29,9 +30,11 @@
     </div>
 
     <div data-role="content" data-theme="a">
-        <a href="#tests-collections-page" data-role="button" data-theme="c" >Tests</a>
+        <a href="#tests-collections-page" data-role="button" data-theme="a" >Run Tests</a>
+        <a href="#edit-tests-page" data-role="button" data-theme="a" >Edit Tests</a>
         <a href="#settings-page" data-role="button" data-theme="a" >Settings</a>
-        <a id="account-button" href="#account-page" data-role="button" data-theme="b" >Account</a>
+        <a href="#help-page" data-role="button" data-theme="a" >Help</a>
+        <a id="account-button" href="#account-page" data-role="button" data-theme="a" >Account</a>
     </div>
 
 </div>
@@ -42,7 +45,16 @@
     </div>
 
     <div data-role="content">
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
 
+<div id="help-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Help</h1>
+    </div>
+
+    <div data-role="content">
         <a href="#main-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
@@ -60,24 +72,49 @@
 
 <div id="tests-collections-page" data-role="page" class="normal-page">
     <div data-role="header">
-        <h1>Tests</h1>
-    </div>
-
-    <div data-role="content" class="ui-grid-a">
-        <div class="ui-block-a">
-            <a href="#edit-tests-page" data-role="button" data-mini="true" data-icon="gear">Edit</a>
-        </div>
-        <div class="ui-block-b">
-            <a href="#new-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
-            <a href="#new-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
-        </div>
+        <h1>Run Tests</h1>
     </div>
 
     <div data-role="content">
+        <div>Click on a test to start it!</div>
         <div id="test-collections" data-role="collapsible-set" ></div>
         <a href="#main-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
+
+<div id="edit-tests-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Edit Tests</h1>
+    </div>
+
+    <div data-role="content" class="ui-grid-a">
+        <div class="ui-block-a">
+            <a href="#new-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
+        </div>
+        <div class="ui-block-b">
+            <a href="#new-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
+        </div>
+    </div>
+
+    <div id="edit-tests-div" data-role="content">
+    </div>
+
+    <div data-role="content" class="ui-grid-a">
+        <div class="ui-block-a">
+            <a href="#edit-test-parameters-page" data-role="button" data-mini="true" class="ui-disabled" data-icon="gear">Edit</a>
+        </div>
+        <div class="ui-block-b">
+            <a href="#delete-test-confirm-page" data-role="button" data-mini="true" class="ui-disabled" >Delete</a>
+        </div>
+    </div>
+
+    <div data-role="content">
+        <a href="#main-page" data-role="button" data-rel="back">Back</a>
+    </div>
+</div>
+
+
+
 
 <div id="new-test-page" data-role="page" class="normal-page">
     <div data-role="header">
@@ -97,25 +134,25 @@
                 <option>Template 1</option>
             </select>
         </div>
-        <a href="#new-test-parameters-page" data-role="button" >Next</a>
+        <a href="#edit-test-parameters-page" data-role="button" >Next</a>
     </div>
 
     <div data-role="content">
-        <a href="#tests-collections-page" data-role="button" data-rel="back">Back</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
 
 
-<div id="new-test-parameters-page" data-role="page" class="normal-page">
+<div id="edit-test-parameters-page" data-role="page" class="normal-page">
     <div data-role="header">
-        <h1>New Test Parameters</h1>
+        <h1>Edit Test Parameters</h1>
     </div>
 
-    <div id="new-test-parameters-div" data-role="content">
+    <div id="edit-test-parameters-div" data-role="content">
     </div>
 
     <div data-role="content">
-        <a href="#new-test-confirm-page" data-role="button" >Create Test</a>
+        <a href="#edit-test-confirm-page" data-role="button" >Save</a>
         <a href="#new-test-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
