@@ -1,41 +1,5 @@
 
 
-function getGlobalFunction(name) {
-    return window[name];
-}
-
-function loadTestTemplate(templateInfo) {
-
-    $.ajax('test_templates/' + templateInfo.path + '/template.js', {
-        complete: function(jqXhr, textStatus) {
-            if (textStatus == "success") {
-                try {
-                    $.globalEval(jqXhr.responseText);
-                    var constrFunc = getGlobalFunction(templateInfo.constructorName);
-                    if (constrFunc) {
-                        var template = new constrFunc();
-                        template.initialize(function(err) {
-                            if (!err) {
-                                testTemplates.push(template);
-                            } else {
-                                console.log("Error when initializing template ");
-                                console.log(templateInfo);
-                                consoel.log(err);
-                            }
-                        });
-                    } else {
-                        console.log("Could not find template constructor " + templateInfo.constructorName);
-                    }
-                } catch (exc) {
-                    console.log("Error when loading template ");
-                    console.log(templateInfo);
-                    console.log(exc);
-                }
-            }
-        },
-        type: 'GET'});
-}
-
 function initNotKnowServer() {
     // Loading templates
     $.ajax("test_templates/index.json", {
@@ -58,187 +22,6 @@ function initNotKnowServer() {
 
 }
 
-function initTestsPage(serverFound) {
-
-    var $testsCollectionsPage = $("#tests-collections-page");
-    $testsCollectionsPage.on('pagebeforeshow', function(evt, data) {
-
-        var htmlArr = [];
-
-        currentTestInfo = null;
-
-        var collections = testsData.testCollections;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
-            htmlArr.push('<div data-role="collapsible" >');
-            htmlArr.push('<h3>' + collection.name,
-//                '<span class="ui-li-count">', collection.tests.length,
-//                '</span>',
-                '</h3>');
-            htmlArr.push('<ul data-role="listview" >');
-            for (var j=0; j<collection.tests.length; j++) {
-                var test = collection.tests[j];
-                htmlArr.push('<li><a class="start-test-button" href="#testing-page" data-test-collection-index="' + i + '" data-test-index="' + j + '" >' + test.name + '</a></li>')
-            }
-            htmlArr.push('</ul>');
-            htmlArr.push('</div>');
-        }
-
-        var $testCollections = $("#test-collections");
-        $testCollections.empty().append($(htmlArr.join("")));
-        $testCollections.trigger("create");
-
-        $testCollections.find(".start-test-button").on('click', function() {
-            var collectionIndex = $(this).data('test-collection-index');
-            var testIndex = $(this).data('test-index');
-            console.log(collectionIndex + " " + testIndex);
-            currentTestInfo = collections[collectionIndex].tests[testIndex];
-//            console.log(currentTest);
-        });
-
-    });
-}
-
-function initEditTestsPage(serverFound) {
-
-    var $editTestsPage = $("#edit-tests-page");
-    $editTestsPage.on('pagebeforeshow', function(evt, data) {
-
-        var htmlArr = [];
-
-        htmlArr.push(
-            '<h4>Test categories:</h4>'
-        );
-
-        var collections = testsData.testCollections;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
-            htmlArr.push('<div data-role="collapsible" >');
-            htmlArr.push('<h3>' + collection.name,
-                '</h3>'
-            );
-            htmlArr.push(
-                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Rename "' + collection.name + '"</a>',
-                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Delete "' + collection.name + '"</a>'
-            );
-            htmlArr.push(
-                '<h4>Tests in category "' + collection.name + '":</h4>'
-            );
-//            htmlArr.push('<ul data-role="listview" >');
-            for (var j=0; j<collection.tests.length; j++) {
-                var test = collection.tests[j];
-                var testId = "test_cb_" + i + "_" + j;
-                htmlArr.push(
-//                    '<li>',
-//                    '<a href="#" data-test-collection-index="' + i + '" data-test-index="' + j + '" >',
-                    '<input type="checkbox" name="' + testId + '" id="' + testId + '" />',
-                    '<label for="' + testId + '">', test.name, '</label>'
-//                    '</a>',
-//                    '</li>'
-                )
-            }
-//            htmlArr.push('</ul>');
-            htmlArr.push('</div>');
-        }
-
-        var $editTestsDiv = $("#edit-tests-div");
-        $editTestsDiv.empty().append($(htmlArr.join("")));
-        $editTestsDiv.trigger("create");
-    });
-
-
-}
-
-function initTestingPage(serverFound) {
-    var $testingPage = $("#testing-page");
-
-    function initTest() {
-        console.log("Running test " + currentTestInfo);
-        if (!currentTestInfo) {
-            console.log("Test not available yet...");
-            setTimeout(initTest, 500);
-            return;
-        }
-
-        var testTemplate = findTemplate(currentTestInfo.template);
-        if (!testTemplate) {
-            console.log("Could not find a test template with name " + currentTestInfo.template + " in:");
-            console.log(testTemplates);
-            return;
-        }
-
-        var test = testTemplate.getTest(copyValueDeep(currentTestInfo.parameterValues));
-        if (!test) {
-            console.log("Unable to create test with parameters:");
-            console.log(currentTestInfo.parameterValues);
-            console.log("With test template: " + currentTestInfo.template);
-            return;
-        }
-
-        var $testContent = $("#test-content");
-        test.runTest($testContent, function(err) {
-
-        });
-    }
-
-    $testingPage.on('pagebeforeshow', function(evt, data) {
-        initTest();
-    });
-
-}
-
-function initNewTestPage(serverFound) {
-
-    var $newTestPage = $("#new-test-page");
-
-    $newTestPage.on('pagebeforeshow', function(evt, data) {
-
-
-        var $newTestContent = $("#new-test-content");
-        $newTestContent.empty();
-
-
-        var htmlArr = [];
-
-        // Category select
-        htmlArr.push(
-            '<div data-role="fieldcontain">',
-            '<label for="new-test-category-select" >Category</label>',
-            '<select id="new-test-category-select">'
-        );
-
-        var collections = testsData.testCollections;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
-            htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
-        }
-
-        htmlArr.push('</select>', '</div>');
-
-        // Template select
-        htmlArr.push(
-            '<div data-role="fieldcontain">',
-            '<label for="new-test-template-select" >Template</label>',
-            '<select id="new-test-template-select">'
-        );
-
-        for (var i=0; i<testTemplates.length; i++) {
-            var t = testTemplates[i];
-            htmlArr.push('<option value="' + t._constructorName + '">', t.displayName, '</option>')
-        }
-
-        htmlArr.push('</select>', '</div>');
-
-
-        $newTestContent.append($(htmlArr.join("")));
-
-        $newTestContent.trigger("create");
-    });
-
-
-}
-
-
 function initKnowWhetherServer(found) {
 
     // Loading tests
@@ -250,15 +33,17 @@ function initKnowWhetherServer(found) {
         $("#account-button").remove();
     }
 
-    initTestsPage(found);
-
-    initEditTestsPage(found);
-
-    initTestingPage(found);
-
-    initNewTestPage(found);
+    initPageLogic();
 
 }
+
+function findServer() {
+    hasServer = false;
+    for (var i=0; i<serverDetectListeners.length; i++) {
+        serverDetectListeners[i](hasServer);
+    }
+}
+
 
 $(document).ready(function() {
     // Initialize things before we know whether an advanced server exists or not

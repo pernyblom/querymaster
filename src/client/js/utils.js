@@ -189,3 +189,10 @@ function copyValueDeep(value, options) {
         return value;
     }
 }
+
+
+
+function getGlobalFunction(name) {
+    return window[name];
+}
+

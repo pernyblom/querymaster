@@ -3,10 +3,10 @@ var idCounter = 1;
 var testTemplates = [];
 
 var testsData = {
-    testCollections: [
+    testCategories: [
         {
             name: "Language",
-            tests: [
+            testInfos: [
                 {
                     name: "Glossary I",
                     template: "SimpleGlossaryTemplate",
@@ -20,7 +20,7 @@ var testsData = {
         },
         {
             name: "Math",
-            tests: [
+            testInfos: [
                 {
                     name: "Multiplication",
                     template: "SimpleMathDualOperationTemplate",
@@ -84,21 +84,9 @@ var testsData = {
 
 var currentTestInfo = null;
 
+var testInfoToEdit = null;
+
 var hasServer = false;
 var serverDetectListeners = [];
-function findServer() {
-    hasServer = false;
-    for (var i=0; i<serverDetectListeners.length; i++) {
-        serverDetectListeners[i](hasServer);
-    }
-}
 
-function findTemplate(name) {
-    for (var i=0; i<testTemplates.length; i++) {
-        var t = testTemplates[i];
-        if (t._constructorName == name) {
-            return t;
-        }
-    }
-    return null;
-}
+

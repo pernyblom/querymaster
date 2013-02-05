@@ -1,4 +1,48 @@
 
+function loadTestTemplate(templateInfo) {
+
+    $.ajax('test_templates/' + templateInfo.path + '/template.js', {
+        complete: function(jqXhr, textStatus) {
+            if (textStatus == "success") {
+                try {
+                    $.globalEval(jqXhr.responseText);
+                    var constrFunc = getGlobalFunction(templateInfo.constructorName);
+                    if (constrFunc) {
+                        var template = new constrFunc();
+                        template.initialize(function(err) {
+                            if (!err) {
+                                testTemplates.push(template);
+                            } else {
+                                console.log("Error when initializing template ");
+                                console.log(templateInfo);
+                                consoel.log(err);
+                            }
+                        });
+                    } else {
+                        console.log("Could not find template constructor " + templateInfo.constructorName);
+                    }
+                } catch (exc) {
+                    console.log("Error when loading template ");
+                    console.log(templateInfo);
+                    console.log(exc);
+                }
+            }
+        },
+        type: 'GET'});
+}
+
+
+function findTemplate(name) {
+    for (var i=0; i<testTemplates.length; i++) {
+        var t = testTemplates[i];
+        if (t._constructorName == name) {
+            return t;
+        }
+    }
+    return null;
+}
+
+
 
 function TestTemplate(displayName) {
     this.displayName = displayName;

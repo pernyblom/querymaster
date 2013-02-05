@@ -14,10 +14,12 @@
     <script src="js/utils.js"></script>
     <script src="js/question.js"></script>
     <script src="js/answer_info.js"></script>
+    <script src="js/test_info.js"></script>
     <script src="js/test_parameter.js"></script>
     <script src="js/test.js"></script>
     <script src="js/test_template.js"></script>
     <script src="js/globals.js"></script>
+    <script src="js/page_logic.js"></script>
     <script src="js/main.js"></script>
     <!-- minify end 1 -->
 </head>
@@ -102,8 +104,10 @@
     <div data-role="content" class="ui-grid-a">
         <div class="ui-block-a">
             <a href="#edit-test-parameters-page" data-role="button" data-mini="true" class="ui-disabled" data-icon="gear">Edit</a>
+            <a href="#duplicate-test-confirm-page" data-role="button" data-mini="true" class="ui-disabled" >Duplicate</a>
         </div>
         <div class="ui-block-b">
+            <a href="#move-test-page" data-role="button" data-mini="true" class="ui-disabled" >Move</a>
             <a href="#delete-test-confirm-page" data-role="button" data-mini="true" class="ui-disabled" >Delete</a>
         </div>
     </div>
@@ -112,7 +116,6 @@
         <a href="#main-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
-
 
 
 
@@ -125,7 +128,7 @@
     </div>
 
     <div data-role="content">
-        <a href="#edit-test-parameters-page" data-role="button" >Next</a>
+        <a id="new-test-next-button" href="#edit-test-parameters-page" data-role="button" >Next</a>
         <a href="#edit-tests-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
@@ -136,11 +139,11 @@
         <h1>Edit Test Parameters</h1>
     </div>
 
-    <div id="edit-test-parameters-div" data-role="content">
+    <div id="edit-test-parameters-content" data-role="content">
     </div>
 
     <div data-role="content">
-        <a href="#edit-test-confirm-page" data-role="button" >Save</a>
+        <a id="edit-test-parameters-save-button" href="#edit-test-confirm-page" data-role="button" >Save</a>
         <a href="#new-test-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
