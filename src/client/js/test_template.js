@@ -79,7 +79,7 @@ TestTemplate.prototype.getOrCreateValueFunctionIfNecessary = function(funcName, 
         var def = params[funcName + "Def"];
         if (def) {
             try {
-                if (isArray(def)) {
+                if (_.isArray(def)) {
                     def = def.join("");
                 }
                 func = eval("var temp = " + def + "; temp;");

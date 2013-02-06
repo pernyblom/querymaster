@@ -17,7 +17,7 @@ SimpleGlossaryTemplate.prototype.addQuestions = function(test, parameterValues) 
 
     var indexArr = createFilledNumericIncArray(pairs.length, 0, 1);
 
-    arrayShuffle(indexArr, Math);
+    indexArr = _.shuffle(indexArr);
 
     for (var i=0; i<count; i++) {
         var q = new SingleTextAnswerQuestion();

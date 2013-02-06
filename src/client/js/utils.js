@@ -1,12 +1,4 @@
 
-function isArray(obj) {
-    return (Object.prototype.toString.call(obj) === '[object Array]');
-}
-
-
-function arrayShuffle(arr, rnd) {
-    for(var r, tmp, i=arr.length; i; r=parseInt(rnd.random()*i), tmp=arr[--i], arr[i]=arr[r], arr[r]=tmp);
-}
 
 function createFilledNumericIncArray(count, element, inc) {
     var result = [];
@@ -175,7 +167,7 @@ function copyObjectDeep(obj, options) {
 
 
 function copyValueDeep(value, options) {
-    if (isArray(value)) {
+    if (_.isArray(value)) {
         var result = [];
         for (var i=0; i<value.length; i++) {
             result[i] = copyValueDeep(value[i], options);
