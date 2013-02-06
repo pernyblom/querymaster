@@ -47,6 +47,8 @@ function initEditTestsPageLogic(serverFound) {
     var $moveTestButton = $editTestsPage.find(".move-test-button");
     var $deleteTestButton = $editTestsPage.find(".delete-test-button");
 
+    var $addTestButton = $editTestsPage.find(".add-test-button");
+
     var selectedTests = {};
     var selectedTest = null;
 
@@ -54,11 +56,20 @@ function initEditTestsPageLogic(serverFound) {
 
         var htmlArr = [];
 
-        htmlArr.push(
-            '<h4>Test categories:</h4>'
-        );
-
         var categories = testsData.testCategories;
+
+        if (categories.length > 0) {
+            htmlArr.push(
+                '<h4>Test categories:</h4>'
+            );
+            $addTestButton.removeClass('ui-disabled');
+        } else {
+            htmlArr.push(
+                '<h4>No categories</h4>'
+            );
+            $addTestButton.addClass('ui-disabled');
+        }
+
         for (var i=0; i<categories.length; i++) {
             var category = categories[i];
             htmlArr.push('<div data-role="collapsible" >');
@@ -114,7 +125,6 @@ function initEditTestsPageLogic(serverFound) {
         $renameAndDeleteButtons.on('click', function() {
             var $button = $(this);
             var catIndex = $button.data('category-index');
-            console.log("Cat index: " + catIndex);
             activeCategory = testsData.testCategories[catIndex];
         });
 
@@ -438,6 +448,43 @@ function initRenameCategoryPageLogic(serverFound) {
 }
 
 
+function initDeleteCategoryPageLogic(serverFound) {
+
+    var $deleteCategoryPage = $("#delete-category-page");
+
+    var $deleteButton = $deleteCategoryPage.find("#delete-category-confirm-button");
+    var $content = $deleteCategoryPage.find("#delete-category-content");
+
+    $deleteCategoryPage.on('pagebeforeshow', function(evt, data) {
+        $content.empty();
+        var htmlArr = [
+            '<p>This will delete category "' + activeCategory.name + '"</p>'
+        ];
+        if (activeCategory.testInfos.length > 0) {
+            var single = activeCategory.testInfos.length == 1;
+            htmlArr.push('<p>All tests in that category will also be deleted. There ',
+                single ? "is " : "are ",
+                activeCategory.testInfos.length,
+                single ? " test" : " tests",
+                ' in there.',
+                '</p>');
+        } else {
+            htmlArr.push('<p>The category is empty</p>');
+        }
+        htmlArr.push('<p>Are you sure about this?</p>');
+
+        $content.append($(htmlArr.join("")));
+    });
+
+    $deleteButton.on('click', function() {
+        var catIndex = getCategoryIndexWithName(activeCategory.name);
+        if (catIndex >= 0) {
+            testsData.testCategories.splice(catIndex, 1);
+        }
+    });
+}
+
+
 
 function initPageLogic(found) {
 
@@ -452,6 +499,6 @@ function initPageLogic(found) {
     initEditTestParametersPageLogic(found);
 
     initAddCategoryPageLogic(found);
-
     initRenameCategoryPageLogic(found);
+    initDeleteCategoryPageLogic(found);
 }

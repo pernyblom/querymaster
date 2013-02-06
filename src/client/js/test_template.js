@@ -15,7 +15,7 @@ function loadTestTemplate(templateInfo) {
                             } else {
                                 console.log("Error when initializing template ");
                                 console.log(templateInfo);
-                                consoel.log(err);
+                                console.log(err);
                             }
                         });
                     } else {

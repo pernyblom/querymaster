@@ -13,6 +13,7 @@ var TestParameterType = {
     DECIMAL_RANGE: 10
 };
 
+
 function TestParameter(displayName, propertyName, type, defaultValue, data, verifiers) {
     this.displayName = displayName || "parameter name";
     this.propertyName = propertyName || "parameterName";

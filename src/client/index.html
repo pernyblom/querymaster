@@ -91,7 +91,7 @@
 
     <div data-role="content" class="ui-grid-a">
         <div class="ui-block-a">
-            <a href="#add-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
+            <a class="add-test-button" href="#add-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
         </div>
         <div class="ui-block-b">
             <a href="#add-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
@@ -166,18 +166,6 @@
 
 <!-- Dialogs and similar pages -->
 
-<div id="delete-category-page" data-role="page" class="normal-page">
-    <div data-role="header">
-        <h1>Delete Category</h1>
-    </div>
-
-    <div data-role="content">
-        <div id="delete-category-content" data-role="content"></div>
-        <span>Are you sure? All tests in that category will be deleted as well.</span>
-        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Delete</a>
-        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
-    </div>
-</div>
 
 
 <div id="delete-test-page" data-role="page" class="normal-page">
@@ -247,6 +235,19 @@
         <span id="rename-category-error-label"></span>
 
         <a id="rename-category-confirm-button" href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Rename</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+
+<div id="delete-category-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Delete Category</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="delete-category-content" data-role="content"></div>
+        <a id="delete-category-confirm-button" href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Delete</a>
         <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
     </div>
 </div>

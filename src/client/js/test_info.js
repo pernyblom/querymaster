@@ -31,13 +31,21 @@ function getCategoryIdMap() {
     return result;
 }
 
-function getCategoryWithName(name) {
+function getCategoryIndexWithName(name) {
     var categories = testsData.testCategories;
     for (var i=0; i<categories.length; i++) {
         var cat = categories[i];
         if (cat.name == name) {
-            return cat;
+            return i;
         }
+    }
+    return -1;
+}
+
+function getCategoryWithName(name) {
+    var index = getCategoryIndexWithName(name);
+    if (index >= 0) {
+        return testsData.testCategories[index];
     }
     return null;
 }

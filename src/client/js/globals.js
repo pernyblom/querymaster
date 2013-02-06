@@ -92,6 +92,8 @@ var activeCategory = null;
 
 var saveTestBackSteps = 1;
 
+var customTestParameters = {};
+
 var hasServer = false;
 var serverDetectListeners = [];
 
