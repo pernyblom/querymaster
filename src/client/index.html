@@ -10,7 +10,7 @@
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script src="js/before_jquery_mobile.js"></script>
     <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <!-- minify start 1 -->
+    <!-- concat minify start 1 -->
     <script src="js/utils.js"></script>
     <script src="js/question.js"></script>
     <script src="js/answer_info.js"></script>
@@ -21,7 +21,7 @@
     <script src="js/globals.js"></script>
     <script src="js/page_logic.js"></script>
     <script src="js/main.js"></script>
-    <!-- minify end 1 -->
+    <!-- concat minify end 1 -->
 </head>
 <body>
 
@@ -91,10 +91,10 @@
 
     <div data-role="content" class="ui-grid-a">
         <div class="ui-block-a">
-            <a href="#new-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
+            <a href="#add-test-page" data-role="button" data-mini="true" data-icon="plus">Add Test</a>
         </div>
         <div class="ui-block-b">
-            <a href="#new-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
+            <a href="#add-category-page" data-role="button" data-mini="true" data-icon="plus">Add Category</a>
         </div>
     </div>
 
@@ -103,12 +103,12 @@
 
     <div data-role="content" class="ui-grid-a">
         <div class="ui-block-a">
-            <a href="#edit-test-parameters-page" data-role="button" data-mini="true" class="ui-disabled" data-icon="gear">Edit</a>
-            <a href="#duplicate-test-confirm-page" data-role="button" data-mini="true" class="ui-disabled" >Duplicate</a>
+            <a href="#edit-test-parameters-page" data-role="button" data-mini="true" class="edit-test-button ui-disabled" data-icon="gear">Edit</a>
+            <a href="#duplicate-test-page" data-role="button" data-mini="true" class="duplicate-test-button ui-disabled" >Duplicate</a>
         </div>
         <div class="ui-block-b">
-            <a href="#move-test-page" data-role="button" data-mini="true" class="ui-disabled" >Move</a>
-            <a href="#delete-test-confirm-page" data-role="button" data-mini="true" class="ui-disabled" >Delete</a>
+            <a href="#move-test-page" data-role="button" data-mini="true" class="move-test-button ui-disabled" >Move</a>
+            <a href="#delete-test-page" data-role="button" data-mini="true" class="delete-test-button ui-disabled" >Delete</a>
         </div>
     </div>
 
@@ -119,16 +119,16 @@
 
 
 
-<div id="new-test-page" data-role="page" class="normal-page">
+<div id="add-test-page" data-role="page" class="normal-page">
     <div data-role="header">
         <h1>Create New Test</h1>
     </div>
 
-    <div id="new-test-content" data-role="content">
+    <div id="add-test-content" data-role="content">
     </div>
 
     <div data-role="content">
-        <a id="new-test-next-button" href="#edit-test-parameters-page" data-role="button" >Next</a>
+        <a id="add-test-next-button" href="#edit-test-parameters-page" data-role="button" >Next</a>
         <a href="#edit-tests-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
@@ -143,8 +143,8 @@
     </div>
 
     <div data-role="content">
-        <a id="edit-test-parameters-save-button" href="#edit-test-confirm-page" data-role="button" >Save</a>
-        <a href="#new-test-page" data-role="button" data-rel="back">Back</a>
+        <a id="edit-test-parameters-save-button" href="#" data-role="button" >Save</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
 
@@ -162,6 +162,89 @@
         <a href="#tests-collections-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
+
+
+<!-- Dialogs and similar pages -->
+<div id="rename-category-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Rename Category</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="rename-category-content" data-role="content"></div>
+
+        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Rename</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+<div id="delete-category-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Delete Category</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="delete-category-content" data-role="content"></div>
+        <span>Are you sure? All tests in that category will be deleted as well.</span>
+        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Delete</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+
+<div id="delete-test-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Delete Tests</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="delete-test-content" data-role="content"></div>
+        <span>Are you sure?</span>
+        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Delete</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+<div id="move-test-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Move Test</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="move-test-content" data-role="content"></div>
+        <span>Are you sure?</span>
+        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Move</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+<div id="duplicate-test-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Duplicate Test</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="duplicate-test-content" data-role="content"></div>
+        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Duplicate</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+<div id="add-category-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Add Category</h1>
+    </div>
+
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="add-category-name-input" >Category name</label>
+            <input id="add-category-name-input" />
+        </div>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Add</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
 
 
 </body>

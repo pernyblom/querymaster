@@ -41,6 +41,15 @@ function initTestsPageLogic(serverFound) {
 function initEditTestsPageLogic(serverFound) {
 
     var $editTestsPage = $("#edit-tests-page");
+
+    var $editTestButton = $editTestsPage.find(".edit-test-button");
+    var $duplicateTestButton = $editTestsPage.find(".duplicate-test-button");
+    var $moveTestButton = $editTestsPage.find(".move-test-button");
+    var $deleteTestButton = $editTestsPage.find(".delete-test-button");
+
+    var selectedTests = {};
+    var selectedTest = null;
+
     $editTestsPage.on('pagebeforeshow', function(evt, data) {
 
         var htmlArr = [];
@@ -49,25 +58,34 @@ function initEditTestsPageLogic(serverFound) {
             '<h4>Test categories:</h4>'
         );
 
-        var collections = testsData.testCategories;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
+        var categories = testsData.testCategories;
+        for (var i=0; i<categories.length; i++) {
+            var category = categories[i];
             htmlArr.push('<div data-role="collapsible" >');
-            htmlArr.push('<h3>' + collection.name,
+            htmlArr.push('<h3>' + category.name,
                 '</h3>'
             );
             htmlArr.push(
-                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Rename "' + collection.name + '"</a>',
-                '<a data-role="button" data-icon="gear" data-inline="true" data-mini="true" href="#" >Delete "' + collection.name + '"</a>'
+                '<a data-role="button" class="rename-category-button" data-icon="gear" ' +
+                    'data-inline="true" data-mini="true" href="#rename-category-page" >Rename "' + category.name + '"</a>',
+                '<a data-role="button" class="delete-category-button" data-icon="gear" ' +
+                    'data-inline="true" data-mini="true" href="#delete-category-page" >Delete "' + category.name + '"</a>'
             );
             htmlArr.push(
-                '<h4>Tests in category "' + collection.name + '":</h4>'
+                '<h4>Tests in category "' + category.name + '":</h4>'
             );
-            for (var j=0; j<collection.testInfos.length; j++) {
-                var test = collection.testInfos[j];
+            for (var j=0; j<category.testInfos.length; j++) {
+                var test = category.testInfos[j];
                 var testId = "test_cb_" + i + "_" + j;
                 htmlArr.push(
-                    '<input type="checkbox" name="' + testId + '" id="' + testId + '" />',
+                    '<input ' +
+                        'type="checkbox" ' +
+                        'name="' + testId + '" ' +
+                        'id="' + testId + '" ' +
+                        'class="edit-tests-page-test-cb" ' +
+                        'data-category-index="' + i + '" ' +
+                        'data-test-index="' + j + '" ' +
+                        '/>',
                     '<label for="' + testId + '">', test.name, '</label>'
                 )
             }
@@ -77,6 +95,50 @@ function initEditTestsPageLogic(serverFound) {
         var $editTestsDiv = $("#edit-tests-div");
         $editTestsDiv.empty().append($(htmlArr.join("")));
         $editTestsDiv.trigger("create");
+
+        var $testCheckboxes = $editTestsDiv.find(".edit-tests-page-test-cb");
+
+
+        $testCheckboxes.on('change', function() {
+            var $cb = $(this);
+            if (this.checked) {
+                selectedTests[this.id] = {categoryIndex: $cb.data('category-index'), testIndex: $cb.data('test-index')};
+            } else {
+                delete selectedTests[this.id];
+            }
+            var count = 0;
+            selectedTest = null;
+            for (var prop in selectedTests) {
+                count++;
+                selectedTest = selectedTests[prop];
+            }
+            if (count == 1) {
+                $editTestButton.removeClass('ui-disabled');
+                $duplicateTestButton.removeClass('ui-disabled');
+                $moveTestButton.removeClass('ui-disabled');
+            } else {
+                $editTestButton.addClass('ui-disabled');
+                $duplicateTestButton.addClass('ui-disabled');
+                $moveTestButton.addClass('ui-disabled');
+            }
+            if (count > 0) {
+                $deleteTestButton.removeClass('ui-disabled');
+            } else {
+                $deleteTestButton.addClass('ui-disabled');
+            }
+        });
+
+        // Reset these each time the page loads
+        selectedTests = {};
+        selectedTest = null;
+    });
+
+    $editTestButton.on('click', function() {
+        if (selectedTest) {
+            testInfoToEdit = findTestInfo(selectedTest.categoryIndex, selectedTest.testIndex);
+            activeCategory = testsData.testCategories[selectedTest.categoryIndex];
+            saveTestBackSteps = 1;
+        }
     });
 
 
@@ -122,12 +184,12 @@ function initTestingPageLogic(serverFound) {
 
 function initNewTestPageLogic(serverFound) {
 
-    var $newTestPage = $("#new-test-page");
+    var $newTestPage = $("#add-test-page");
 
     $newTestPage.on('pagebeforeshow', function(evt, data) {
 
 
-        var $newTestContent = $("#new-test-content");
+        var $newTestContent = $("#add-test-content");
         $newTestContent.empty();
 
 
@@ -137,8 +199,8 @@ function initNewTestPageLogic(serverFound) {
         // Template select
         htmlArr.push(
             '<div data-role="fieldcontain">',
-            '<label for="new-test-template-select" >Template</label>',
-            '<select id="new-test-template-select">'
+            '<label for="add-test-template-select" >Template</label>',
+            '<select id="add-test-template-select">'
         );
 
         for (var i=0; i<testTemplates.length; i++) {
@@ -153,16 +215,18 @@ function initNewTestPageLogic(serverFound) {
 
         $newTestContent.trigger("create");
 
+    });
 
-        var $newTestNextButton = $newTestPage.find("#new-test-next-button");
 
-        $newTestNextButton.click(function() {
-            var template = $("#new-test-template-select").val();
+    var $newTestNextButton = $newTestPage.find("#add-test-next-button");
 
-            testInfoToEdit = new TestInfo();
-            testInfoToEdit.template = template;
+    $newTestNextButton.click(function() {
+        var template = $newTestPage.find("#add-test-template-select").val();
 
-        });
+        testInfoToEdit = new TestInfo();
+        activeCategory = null;
+        saveTestBackSteps = 2;
+        testInfoToEdit.template = template;
 
     });
 
@@ -213,25 +277,29 @@ function initEditTestParametersPageLogic(serverFound) {
             htmlArr.push('Could not edit parameters. Template not selected.');
         }
 
-        // Category select
-        htmlArr.push(
-            '<div data-role="fieldcontain">',
-            '<label for="new-test-category-select" >Category</label>',
-            '<select id="new-test-category-select">'
-        );
+        // Category select only when creating new test
+        if (!activeCategory) {
 
-        var collections = testsData.testCategories;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
-            htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+            htmlArr.push(
+                '<div data-role="fieldcontain">',
+                '<label for="add-test-category-select" >Category</label>',
+                '<select id="add-test-category-select">'
+            );
+
+            var collections = testsData.testCategories;
+            for (var i=0; i<collections.length; i++) {
+                var collection = collections[i];
+                htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+            }
+
+            htmlArr.push('</select>', '</div>');
         }
-
-        htmlArr.push('</select>', '</div>');
 
         var $content = $editTestParametersPage.find("#edit-test-parameters-content");
         $content.empty();
 
         $content.append($(htmlArr.join("")));
+
 
         // Initialize all the params in the DOM
         function initializeParamsInDom(params) {
@@ -246,14 +314,22 @@ function initEditTestParametersPageLogic(serverFound) {
 
         $content.trigger("create");
 
-        var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
-
-        $saveButton.click(function() {
-            var category = $("#new-test-category-select").val();
-
-        });
 
     });
+
+    var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
+    $saveButton.click(function() {
+        var categoryName = "";
+        if (activeCategory) {
+            categoryName = activeCategory.name;
+        } else {
+            categoryName = $("#add-test-category-select").val();
+        }
+        console.log("Saving in category " + categoryName);
+
+        window.history.go(-saveTestBackSteps);
+    });
+
 }
 
 

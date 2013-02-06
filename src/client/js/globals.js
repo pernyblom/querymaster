@@ -2,6 +2,8 @@ var idCounter = 1;
 
 var testTemplates = [];
 
+
+
 var testsData = {
     testCategories: [
         {
@@ -85,6 +87,10 @@ var testsData = {
 var currentTestInfo = null;
 
 var testInfoToEdit = null;
+
+var activeCategory = null;
+
+var saveTestBackSteps = 1;
 
 var hasServer = false;
 var serverDetectListeners = [];
