@@ -67,13 +67,27 @@ function initEditTestsPageLogic(serverFound) {
             );
             htmlArr.push(
                 '<a data-role="button" class="rename-category-button" data-icon="gear" ' +
-                    'data-inline="true" data-mini="true" href="#rename-category-page" >Rename "' + category.name + '"</a>',
+                    'data-category-index="' + i + '" ' +
+                    'id="rename-category-button-' + i + '" ' +
+                    'data-inline="true" ' +
+                    'data-mini="true" ' +
+                    'href="#rename-category-page" >Rename "' + category.name + '"</a>',
                 '<a data-role="button" class="delete-category-button" data-icon="gear" ' +
-                    'data-inline="true" data-mini="true" href="#delete-category-page" >Delete "' + category.name + '"</a>'
+                    'data-category-index="' + i + '" ' +
+                    'id="delete-category-button-' + i + '" ' +
+                    'data-inline="true" ' +
+                    'data-mini="true" ' +
+                    'href="#delete-category-page" >Delete "' + category.name + '"</a>'
             );
-            htmlArr.push(
-                '<h4>Tests in category "' + category.name + '":</h4>'
-            );
+            if (category.testInfos.length > 0) {
+                htmlArr.push(
+                    '<h4>Tests in category "' + category.name + '":</h4>'
+                );
+            } else {
+                htmlArr.push(
+                    '<h4>No tests in category "' + category.name + '"</h4>'
+                );
+            }
             for (var j=0; j<category.testInfos.length; j++) {
                 var test = category.testInfos[j];
                 var testId = "test_cb_" + i + "_" + j;
@@ -96,9 +110,15 @@ function initEditTestsPageLogic(serverFound) {
         $editTestsDiv.empty().append($(htmlArr.join("")));
         $editTestsDiv.trigger("create");
 
+        var $renameAndDeleteButtons = $editTestsDiv.find(".rename-category-button, .delete-category-button");
+        $renameAndDeleteButtons.on('click', function() {
+            var $button = $(this);
+            var catIndex = $button.data('category-index');
+            console.log("Cat index: " + catIndex);
+            activeCategory = testsData.testCategories[catIndex];
+        });
+
         var $testCheckboxes = $editTestsDiv.find(".edit-tests-page-test-cb");
-
-
         $testCheckboxes.on('change', function() {
             var $cb = $(this);
             if (this.checked) {
@@ -332,6 +352,91 @@ function initEditTestParametersPageLogic(serverFound) {
 
 }
 
+function verifyAndUpdateCategoryNameInput($categoryNameInput, $confirmButton, $errorLabel, options) {
+    if (!options) {
+        options = {};
+    }
+
+    var errors = []
+    var newName = $categoryNameInput.val().trim();
+    var nameOk = categoryNameOk(newName, errors, options.okNames);
+    if (nameOk) {
+        $confirmButton.removeClass("ui-disabled");
+    } else {
+        $confirmButton.addClass("ui-disabled");
+    }
+    var errorString = errors.join(", ");
+    if (!errorString) {
+        var noErrorMessage = options.noErrorMessage;
+        if (!noErrorMessage) {
+            noErrorMessage = 'Name OK!';
+        }
+        errorString = noErrorMessage;
+    }
+    $errorLabel[0].innerHTML = errorString;
+
+}
+
+
+function initAddCategoryPageLogic(serverFound) {
+
+    var $addCategoryPage = $("#add-category-page");
+
+    var $addButton = $addCategoryPage.find("#add-category-confirm-button");
+    var $categoryNameInput = $addCategoryPage.find("#add-category-name-input");
+    var $errorLabel = $addCategoryPage.find("#add-category-error-label");
+
+    var verifyOptions = {noErrorMessage: "Press 'Add' to create a new category"};
+
+    $addCategoryPage.on('pagebeforeshow', function(evt, data) {
+        $categoryNameInput.val(getUniqueCategoryName());
+        verifyAndUpdateCategoryNameInput($categoryNameInput, $addButton, $errorLabel, verifyOptions);
+    });
+
+    $categoryNameInput.on('keydown keypress keyup change', function() {
+        verifyAndUpdateCategoryNameInput($categoryNameInput, $addButton, $errorLabel, verifyOptions);
+    });
+
+    $addButton.on('click', function() {
+        var newName = $categoryNameInput.val().trim();
+        if (categoryNameOk(newName, [])) {
+            var newCat = new TestInfoCategory();
+            newCat.name = newName;
+            testsData.testCategories.push(newCat);
+        }
+    });
+}
+
+
+function initRenameCategoryPageLogic(serverFound) {
+
+    var $renameCategoryPage = $("#rename-category-page");
+
+    var $addButton = $renameCategoryPage.find("#rename-category-confirm-button");
+    var $categoryNameInput = $renameCategoryPage.find("#rename-category-name-input");
+    var $errorLabel = $renameCategoryPage.find("#rename-category-error-label");
+
+    var okNames = {};
+    var verifyOptions = {};
+    $renameCategoryPage.on('pagebeforeshow', function(evt, data) {
+        okNames[activeCategory.name] = true;
+        verifyOptions = {okNames: okNames, noErrorMessage: "Press 'Rename' to change the name of category '" + activeCategory.name + "'"};
+        $categoryNameInput.val(activeCategory.name);
+        verifyAndUpdateCategoryNameInput($categoryNameInput, $addButton, $errorLabel, verifyOptions);
+    });
+
+    $categoryNameInput.on('keydown keypress keyup change', function() {
+        verifyAndUpdateCategoryNameInput($categoryNameInput, $addButton, $errorLabel, verifyOptions);
+    });
+
+    $addButton.on('click', function() {
+        var newName = $categoryNameInput.val().trim();
+        if (categoryNameOk(newName, [], okNames)) {
+            activeCategory.name = newName;
+        }
+    });
+}
+
 
 
 function initPageLogic(found) {
@@ -346,4 +451,7 @@ function initPageLogic(found) {
 
     initEditTestParametersPageLogic(found);
 
+    initAddCategoryPageLogic(found);
+
+    initRenameCategoryPageLogic(found);
 }

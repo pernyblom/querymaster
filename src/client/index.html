@@ -165,18 +165,6 @@
 
 
 <!-- Dialogs and similar pages -->
-<div id="rename-category-page" data-role="page" class="normal-page">
-    <div data-role="header">
-        <h1>Rename Category</h1>
-    </div>
-
-    <div data-role="content">
-        <div id="rename-category-content" data-role="content"></div>
-
-        <a href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Rename</a>
-        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
-    </div>
-</div>
 
 <div id="delete-category-page" data-role="page" class="normal-page">
     <div data-role="header">
@@ -240,7 +228,25 @@
             <label for="add-category-name-input" >Category name</label>
             <input id="add-category-name-input" />
         </div>
-        <a href="#edit-tests-page" data-role="button" data-rel="back">Add</a>
+        <span id="add-category-error-label"></span>
+        <a id="add-category-confirm-button" href="#edit-tests-page" data-role="button" data-rel="back">Add</a>
+        <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
+<div id="rename-category-page" data-role="page" class="normal-page">
+    <div data-role="header">
+        <h1>Rename Category</h1>
+    </div>
+
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="rename-category-name-input" >New category name</label>
+            <input id="rename-category-name-input" />
+        </div>
+        <span id="rename-category-error-label"></span>
+
+        <a id="rename-category-confirm-button" href="#edit-tests-page" data-theme="a" data-role="button" data-rel="back">Rename</a>
         <a href="#edit-tests-page" data-role="button" data-rel="back">Cancel</a>
     </div>
 </div>
