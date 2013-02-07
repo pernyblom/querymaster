@@ -46,14 +46,15 @@ function findTemplate(name) {
 
 function TestTemplate(displayName) {
     this.displayName = displayName;
+    this.description = "";
     this.parameters = []; // Shown before running test if not already set.
     this.dataParameters = []; // Not shown before running test. Used for glossary strings etc. Shown when test is edited
     this.initialized = false;
 }
-TestTemplate.prototype.getTest = function(parameterValues) {
-    return new Test(this, parameterValues);
+TestTemplate.prototype.getTest = function(testInfo) {
+    return new Test(this, testInfo);
 };
-TestTemplate.prototype.addQuestions = function(test, templateParams) {
+TestTemplate.prototype.addQuestions = function(test, testInfo) {
 };
 
 TestTemplate.prototype.initialize = function(callback) {

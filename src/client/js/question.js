@@ -13,7 +13,6 @@ Question.prototype.initializeInDom = function($aParent) {
 function SingleTextAnswerQuestion() {
     Question.call(this);
     this.questionTexts = [];
-    this.answerCallback = null;
     this.correctAnswers = [];
     this.inputType = "text";
     this.questionTextsTag = "p";
@@ -36,9 +35,9 @@ SingleTextAnswerQuestion.prototype.evaluateAnswer = function($aParent) {
     var that = this;
     var index = that.correctAnswers.indexOf(answerValue.trim());
     if (index >= 0) {
-        console.log("Correct answer! " + answerValue);
+//        console.log("Correct answer! " + answerValue);
     } else {
-        console.log("Not correct answer: " + answerValue + " among: " + that.correctAnswers.join(""));
+//        console.log("Not correct answer: " + answerValue + " among: " + that.correctAnswers.join(""));
     }
     var answerInfo = new AnswerInfo();
     var correct = index >= 0;

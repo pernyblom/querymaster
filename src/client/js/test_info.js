@@ -92,6 +92,7 @@ function TestInfoCategory() {
 function TestInfo() {
     this.name = "";
     this.template = ""; // Constructor name
+    this.description = "";
     this.parameterValues = {};
     this._constructorName = "TestInfo";
 }

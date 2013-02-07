@@ -7,18 +7,19 @@ SimpleMathDualOperationTemplate.prototype = new TestTemplate();
 
 
 
-SimpleMathDualOperationTemplate.prototype.addQuestions = function(test, templateParams) {
-    test.questionsPerScreen = templateParams.questionsPerScreen || 1;
+SimpleMathDualOperationTemplate.prototype.addQuestions = function(test, testInfo) {
+    var parameterValues = testInfo.parameterValues;
+    test.questionsPerScreen = parameterValues.questionsPerScreen || 1;
 
     var questions = [];
 
-    var firstFunc = this.getOrCreateValueFunctionIfNecessary("firstValueFunction", templateParams);
-    var secondFunc = this.getOrCreateValueFunctionIfNecessary("secondValueFunction", templateParams);
+    var firstFunc = this.getOrCreateValueFunctionIfNecessary("firstValueFunction", parameterValues);
+    var secondFunc = this.getOrCreateValueFunctionIfNecessary("secondValueFunction", parameterValues);
 
-    for (var i=0; i<templateParams.questionCount; i++) {
+    for (var i=0; i<parameterValues.questionCount; i++) {
         var q = new SingleTextAnswerQuestion();
 
-        var operation = sampleData(templateParams.operations, Math);
+        var operation = sampleData(parameterValues.operations, Math);
 
         var first = firstFunc(test, operation);
         var second = secondFunc(test, operation, first);
@@ -43,8 +44,8 @@ SimpleMathDualOperationTemplate.prototype.addQuestions = function(test, template
     test.questions = questions;
 };
 
-SimpleMathDualOperationTemplate.prototype.getTest = function(parameterValues) {
-    var result = new FixedLengthTest(this, parameterValues);
+SimpleMathDualOperationTemplate.prototype.getTest = function(testInfo) {
+    var result = new FixedLengthTest(this, testInfo);
     return result;
 };
 

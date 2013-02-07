@@ -30,7 +30,7 @@ function initTestsPageLogic(serverFound) {
         $testCollections.find(".start-test-button").on('click', function() {
             var collectionIndex = $(this).data('test-collection-index');
             var testIndex = $(this).data('test-index');
-            console.log(collectionIndex + " " + testIndex);
+//            console.log(collectionIndex + " " + testIndex);
             currentTestInfo = collections[collectionIndex].testInfos[testIndex];
 //            console.log(currentTest);
         });
@@ -188,7 +188,7 @@ function initTestingPageLogic(serverFound) {
     var $testingPage = $("#testing-page");
 
     function initTest() {
-        console.log("Running test " + currentTestInfo);
+//        console.log("Running test " + currentTestInfo);
         if (!currentTestInfo) {
             console.log("Test not available yet...");
             setTimeout(initTest, 500);
@@ -202,7 +202,7 @@ function initTestingPageLogic(serverFound) {
             return;
         }
 
-        var test = testTemplate.getTest(copyValueDeep(currentTestInfo.parameterValues));
+        var test = testTemplate.getTest(copyValueDeep(currentTestInfo));
         if (!test) {
             console.log("Unable to create test with parameters:");
             console.log(currentTestInfo.parameterValues);

@@ -26,7 +26,7 @@ function initKnowWhetherServer(found) {
 
     // Loading tests
 
-    console.log("Initializing know whether server");
+//    console.log("Initializing know whether server");
 
     // If server isn't present, we can not log in
     if (!found) {

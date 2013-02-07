@@ -6,12 +6,13 @@ var TestState = {
     RESULT: 3
 };
 
-function Test(template, parameterValues) {
+function Test(template, testInfo) {
     this.doneCallback = null;
     this.template = template;
     this.parameters = [];
-    this.parameterValues = parameterValues;
-    this.testInfoHtml = "Info about test goes here...";
+    this.testInfo = testInfo;
+    this.parameterValues = testInfo ? testInfo.parameterValues : {};
+    this.description = testInfo ? testInfo.description : "";
     this.correctFraction = 0;
     this.totalFraction = 0;
     this.state = TestState.INFO;
@@ -95,7 +96,7 @@ Test.prototype.getTestInfoHtml = function(arr) {
     var parametersHtml = parametersHtmlArr.join("");
     arr.push(
         '<div data-role="content">',
-        this.testInfoHtml,
+        this.description,
         parametersHtml,
         '<a href="#" id="test-start-button" data-role="button">Start!</a>',
         '</div>'
@@ -154,7 +155,7 @@ Test.prototype.startTest = function($aParent) {
     this.getParameterValues(tdParams, $aParent);
     this.getParameterValues(params, $aParent);
 
-    this.template.addQuestions(this, this.parameterValues);
+    this.template.addQuestions(this, this.testInfo);
 
     this.state = TestState.QUESTIONS;
 
@@ -195,8 +196,8 @@ Test.prototype.initializeInDom = function($aParent) {
 
 };
 
-function FixedLengthTest(template, parameterValues) {
-    Test.call(this, template, parameterValues);
+function FixedLengthTest(template, testInfo) {
+    Test.call(this, template, testInfo);
     this.questions = [];
     this.questionIndex = 0;
     this.questionsPerScreen = 1;

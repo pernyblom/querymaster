@@ -5,7 +5,8 @@ function SimpleGlossaryTemplate() {
 SimpleGlossaryTemplate.prototype = new TestTemplate();
 
 
-SimpleGlossaryTemplate.prototype.addQuestions = function(test, parameterValues) {
+SimpleGlossaryTemplate.prototype.addQuestions = function(test, testInfo) {
+    var parameterValues = testInfo.parameterValues;
     test.questionsPerScreen = parameterValues.questionsPerScreen || 1;
     var questions = [];
 
@@ -15,7 +16,7 @@ SimpleGlossaryTemplate.prototype.addQuestions = function(test, parameterValues) 
 
     var count = Math.min(parameterValues.questionCount, pairs.length);
 
-    var indexArr = createFilledNumericIncArray(pairs.length, 0, 1);
+    var indexArr = _.range(0, pairs.length, 1); // createFilledNumericIncArray(pairs.length, 0, 1);
 
     indexArr = _.shuffle(indexArr);
 
@@ -33,8 +34,8 @@ SimpleGlossaryTemplate.prototype.addQuestions = function(test, parameterValues) 
     test.questions = questions;
 };
 
-SimpleGlossaryTemplate.prototype.getTest = function(parameterValues) {
-    var result = new FixedLengthTest(this, parameterValues);
+SimpleGlossaryTemplate.prototype.getTest = function(testInfo) {
+    var result = new FixedLengthTest(this, testInfo);
 
     return result;
 };
