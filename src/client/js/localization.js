@@ -1,20 +1,28 @@
 
-function localizeProperty(locProperty, defaultText) {
-    if (localizationData) {
-        var text = localizationData[locProperty];
+function localizeProperty(locProperty, defaultText, data) {
+    if (!data) {
+        data = localizationData;
+    }
+    if (data) {
+        var text = data[locProperty];
         if (text) {
             return text;
         }
     }
-    console.log("Could not find language string for " + locProperty + " language: " + language);
+    if (language != "en") {
+        console.log("Could not find language string for " + locProperty + " language: " + language);
+    }
     return defaultText;
 }
 
-function localizeJQuery($content) {
-    if (localizationData) {
+function localizeJQuery($content, data) {
+    if (!data) {
+        data = localizationData;
+    }
+    if (data) {
         $content.each(function() {
             var locProperty = $(this).data('loc');
-            this.innerHTML = localizeProperty(locProperty, this.innerHTML);
+            this.innerHTML = localizeProperty(locProperty, this.innerHTML, data);
         });
     }
 }

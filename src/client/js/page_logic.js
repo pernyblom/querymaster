@@ -83,13 +83,17 @@ function initEditTestsPageLogic(serverFound) {
                     'id="rename-category-button-' + i + '" ' +
                     'data-inline="true" ' +
                     'data-mini="true" ' +
-                    'href="#rename-category-page" >Rename "' + _.escape(category.name) + '"</a>',
+                    'href="#rename-category-page" >' +
+                    localizeProperty('rename_target', "Rename") +
+                    ' "' + _.escape(category.name) + '"</a>',
                 '<a data-role="button" class="delete-category-button" data-icon="gear" ' +
                     'data-category-index="' + i + '" ' +
                     'id="delete-category-button-' + i + '" ' +
                     'data-inline="true" ' +
                     'data-mini="true" ' +
-                    'href="#delete-category-page" >Delete "' + _.escape(category.name) + '"</a>'
+                    'href="#delete-category-page" >' +
+                    localizeProperty('delete_target', 'Delete') +
+                    ' "' + _.escape(category.name) + '"</a>'
             );
             if (category.testInfos.length > 0) {
                 htmlArr.push(

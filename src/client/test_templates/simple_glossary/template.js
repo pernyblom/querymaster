@@ -1,5 +1,5 @@
-function SimpleGlossaryTemplate() {
-    TestTemplate.call(this, "Simple Glossary");
+function SimpleGlossaryTemplate(path) {
+    TestTemplate.call(this, "Simple Glossary", path);
     this._constructorName = "SimpleGlossaryTemplate";
 }
 SimpleGlossaryTemplate.prototype = new TestTemplate();

@@ -1,3 +1,7 @@
 {
-    "run-tests": "Run Tests"
+    "run-tests": "Run Tests",
+    "edit-tests": "Edit Tests",
+    "settings": "Settings",
+    "account": "Account",
+    "help": "Help"
 }

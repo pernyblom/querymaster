@@ -1,14 +1,16 @@
 
 function loadTestTemplate(templateInfo) {
-
+//    console.log("loading test template");
+//    console.log(templateInfo);
     $.ajax('test_templates/' + templateInfo.path + '/template.js', {
         complete: function(jqXhr, textStatus) {
+//            console.log("init test template");
             if (textStatus == "success") {
                 try {
                     $.globalEval(jqXhr.responseText);
                     var constrFunc = getGlobalFunction(templateInfo.constructorName);
                     if (constrFunc) {
-                        var template = new constrFunc();
+                        var template = new constrFunc(templateInfo.path);
                         template.initialize(function(err) {
                             if (!err) {
                                 testTemplates.push(template);
@@ -26,8 +28,12 @@ function loadTestTemplate(templateInfo) {
                     console.log(templateInfo);
                     console.log(exc);
                 }
+            } else {
+                console.log("Failed to load test template " + textStatus);
+                console.log(templateInfo);
             }
         },
+        dataType: "text",
         type: 'GET'});
 }
 
@@ -44,18 +50,42 @@ function findTemplate(name) {
 
 
 
-function TestTemplate(displayName) {
+function TestTemplate(displayName, path) {
     this.displayName = displayName;
+    this.localizationData = null;
+    this.path = path;
     this.description = "";
     this.parameters = []; // Shown before running test if not already set.
     this.dataParameters = []; // Not shown before running test. Used for glossary strings etc. Shown when test is edited
     this.initialized = false;
+    this._constructorName = "TestTemplate";
 }
 TestTemplate.prototype.getTest = function(testInfo) {
     return new Test(this, testInfo);
 };
 TestTemplate.prototype.addQuestions = function(test, testInfo) {
 };
+
+TestTemplate.prototype.initializeLocalization = function(callback) {
+    try {
+        var that = this;
+        $.ajax("test_templates/" + that.path + "/locale_" + language + ".json", {
+            complete: function(jqXhr, textStatus) {
+                if (textStatus == "success") {
+                    that.localizationData = $.parseJSON(jqXhr.responseText);
+                } else {
+                    console.log(that._constructorName + " could not find locale file for language " + language);
+                }
+                if (callback) {
+                    callback(null);
+                }
+            },
+            type: 'GET'});
+    } catch (exc) {
+        callback(exc);
+    }
+};
+
 
 TestTemplate.prototype.initialize = function(callback) {
     if (!this.initialized) {

@@ -1,3 +1,25 @@
 {
-    "run-tests": "Kör Tester"
+    "run-tests": "Kör Tester",
+    "edit-tests": "Redigera Tester",
+    "settings": "Inställningar",
+    "account": "Konto",
+    "help": "Hjälp",
+    "main-menu": "Huvudmeny",
+    "back": "Tillbaka",
+    "cancel": "Avbryt",
+    "delete": "Ta bort",
+    "delete_target": "Ta bort",
+    "rename": "Ändra namn",
+    "rename_target": "Ändra namn på",
+    "interface": "Gränssnitt",
+    "sound": "Ljud",
+    "advanced": "Avancerat",
+    "create-new-test": "Skapa nytt test",
+    "edit-test-parameters": "Ändra testparametrar",
+    "add-category": "Lägg till kategori",
+    "rename-category": "Ändra kategorinamn",
+    "delete-category": "Ta bort kategori",
+    "delete-tests": "Ta bort tester",
+    "move-tests": "Flytta tester",
+    "duplicate-tests": "Duplicera tester"
 }
