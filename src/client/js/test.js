@@ -61,9 +61,9 @@ Test.prototype.getFeedbackHtml = function(arr) {
         var answerInfo = this.answerInfos[i];
         arr.push(
             '<p>',
-            answerInfo.badFeedbackContent,
-            answerInfo.goodFeedbackContent,
-            answerInfo.warningFeedbackContent,
+            _.escape(answerInfo.badFeedbackContent),
+            _.escape(answerInfo.goodFeedbackContent),
+            _.escape(answerInfo.warningFeedbackContent),
             '</p>'
         );
     }
@@ -96,7 +96,7 @@ Test.prototype.getTestInfoHtml = function(arr) {
     var parametersHtml = parametersHtmlArr.join("");
     arr.push(
         '<div data-role="content">',
-        this.description,
+        _.escape(this.description),
         parametersHtml,
         '<a href="#" id="test-start-button" data-role="button">Start!</a>',
         '</div>'

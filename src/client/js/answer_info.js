@@ -4,3 +4,4 @@ function AnswerInfo() {
     this.warningFeedbackContent = "";
     this.badFeedbackContent = "";
 }
+

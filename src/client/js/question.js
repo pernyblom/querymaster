@@ -24,7 +24,7 @@ SingleTextAnswerQuestion.prototype = new Question();
 SingleTextAnswerQuestion.prototype.getHtml = function(arr) {
     for (var i=0; i<this.questionTexts.length; i++) {
         var t = this.questionTexts[i];
-        arr.push('<' + this.questionTextsTag + ' >', t, '</' + this.questionTextsTag + '>');
+        arr.push('<' + this.questionTextsTag + ' >', _.escape(t), '</' + this.questionTextsTag + '>');
     }
     this.questionInputId = 'question-input-' + idCounter++;
     arr.push('<input type="' + this.inputType + '" id="' + this.questionInputId + '" />');

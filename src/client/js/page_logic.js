@@ -8,16 +8,17 @@ function initTestsPageLogic(serverFound) {
 
         currentTestInfo = null;
 
-        var collections = testsData.testCategories;
-        for (var i=0; i<collections.length; i++) {
-            var collection = collections[i];
+        var categories = testsData.testCategories;
+        for (var i=0; i<categories.length; i++) {
+            var category = categories[i];
             htmlArr.push('<div data-role="collapsible" >');
-            htmlArr.push('<h3>' + collection.name,
+            htmlArr.push('<h3>' + _.escape(category.name),
                 '</h3>');
             htmlArr.push('<ul data-role="listview" >');
-            for (var j=0; j<collection.testInfos.length; j++) {
-                var test = collection.testInfos[j];
-                htmlArr.push('<li><a class="start-test-button" href="#testing-page" data-test-collection-index="' + i + '" data-test-index="' + j + '" >' + test.name + '</a></li>')
+            for (var j=0; j<category.testInfos.length; j++) {
+                var test = category.testInfos[j];
+                htmlArr.push('<li><a class="start-test-button" href="#testing-page" data-test-collection-index="' + i + '" data-test-index="' + j + '" >' +
+                    _.escape(test.name) + '</a></li>')
             }
             htmlArr.push('</ul>');
             htmlArr.push('</div>');
@@ -31,7 +32,7 @@ function initTestsPageLogic(serverFound) {
             var collectionIndex = $(this).data('test-collection-index');
             var testIndex = $(this).data('test-index');
 //            console.log(collectionIndex + " " + testIndex);
-            currentTestInfo = collections[collectionIndex].testInfos[testIndex];
+            currentTestInfo = categories[collectionIndex].testInfos[testIndex];
 //            console.log(currentTest);
         });
 
@@ -73,7 +74,7 @@ function initEditTestsPageLogic(serverFound) {
         for (var i=0; i<categories.length; i++) {
             var category = categories[i];
             htmlArr.push('<div data-role="collapsible" >');
-            htmlArr.push('<h3>' + category.name,
+            htmlArr.push('<h3>' + _.escape(category.name),
                 '</h3>'
             );
             htmlArr.push(
@@ -82,21 +83,21 @@ function initEditTestsPageLogic(serverFound) {
                     'id="rename-category-button-' + i + '" ' +
                     'data-inline="true" ' +
                     'data-mini="true" ' +
-                    'href="#rename-category-page" >Rename "' + category.name + '"</a>',
+                    'href="#rename-category-page" >Rename "' + _.escape(category.name) + '"</a>',
                 '<a data-role="button" class="delete-category-button" data-icon="gear" ' +
                     'data-category-index="' + i + '" ' +
                     'id="delete-category-button-' + i + '" ' +
                     'data-inline="true" ' +
                     'data-mini="true" ' +
-                    'href="#delete-category-page" >Delete "' + category.name + '"</a>'
+                    'href="#delete-category-page" >Delete "' + _.escape(category.name) + '"</a>'
             );
             if (category.testInfos.length > 0) {
                 htmlArr.push(
-                    '<h4>Tests in category "' + category.name + '":</h4>'
+                    '<h4>Tests in category "' + _.escape(category.name) + '":</h4>'
                 );
             } else {
                 htmlArr.push(
-                    '<h4>No tests in category "' + category.name + '"</h4>'
+                    '<h4>No tests in category "' + _.escape(category.name) + '"</h4>'
                 );
             }
             for (var j=0; j<category.testInfos.length; j++) {
@@ -111,7 +112,7 @@ function initEditTestsPageLogic(serverFound) {
                         'data-category-index="' + i + '" ' +
                         'data-test-index="' + j + '" ' +
                         '/>',
-                    '<label for="' + testId + '">', test.name, '</label>'
+                    '<label for="' + testId + '">', _.escape(test.name), '</label>'
                 )
             }
             htmlArr.push('</div>');
@@ -326,10 +327,10 @@ function initEditTestParametersPageLogic(serverFound) {
                 '<select id="add-test-category-select">'
             );
 
-            var collections = testsData.testCategories;
-            for (var i=0; i<collections.length; i++) {
-                var collection = collections[i];
-                htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+            var categories = testsData.testCategories;
+            for (var i=0; i<categories.length; i++) {
+                var category = categories[i];
+                htmlArr.push('<option value="' + _.escape(category.name) + '">', _.escape(category.name), '</option>')
             }
 
             htmlArr.push('</select>', '</div>');
@@ -353,8 +354,6 @@ function initEditTestParametersPageLogic(serverFound) {
         initializeParamsInDom(testParams);
 
         $content.trigger("create");
-
-
     });
 
     var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
@@ -363,7 +362,7 @@ function initEditTestParametersPageLogic(serverFound) {
         if (activeCategoryIndex >= 0) {
             categoryName = testsData.testCategories[activeCategoryIndex].name;
         } else {
-            categoryName = $("#add-test-category-select").val();
+            categoryName = _.unescape($("#add-test-category-select").val());
         }
         console.log("Saving in category " + categoryName);
 
@@ -441,8 +440,8 @@ function initRenameCategoryPageLogic(serverFound) {
     $renameCategoryPage.on('pagebeforeshow', function(evt, data) {
         var activeCategory = testsData.testCategories[activeCategoryIndex];
         okNames[activeCategory.name] = true;
-        verifyOptions = {okNames: okNames, noErrorMessage: "Press 'Rename' to change the name of category '" + activeCategory.name + "'"};
-        $categoryNameInput.val(activeCategory.name);
+        verifyOptions = {okNames: okNames, noErrorMessage: "Press 'Rename' to change the name of category '" + _.escape(activeCategory.name) + "'"};
+        $categoryNameInput.val(_.escape(activeCategory.name));
         verifyAndUpdateCategoryNameInput($categoryNameInput, $addButton, $errorLabel, verifyOptions);
     });
 
@@ -472,7 +471,7 @@ function initDeleteCategoryPageLogic(serverFound) {
         var activeCategory = testsData.testCategories[activeCategoryIndex];
 
         var htmlArr = [
-            '<p>This will delete category "' + activeCategory.name + '"</p>'
+            '<p>This will delete category "' + _.escape(activeCategory.name) + '"</p>'
         ];
         if (activeCategory.testInfos.length > 0) {
             var single = activeCategory.testInfos.length == 1;
@@ -551,8 +550,9 @@ function initMoveTestPageLogic(serverFound) {
 
         var categories = testsData.testCategories;
         for (var i=0; i<categories.length; i++) {
-            var collection = categories[i];
-            htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+            var category = categories[i];
+            var catName = _.escape(category.name);
+            htmlArr.push('<option value="' + catName + '">', catName, '</option>')
         }
 
         htmlArr.push('</select>');
