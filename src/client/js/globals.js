@@ -92,6 +92,8 @@ var activeTestIndexInfos = [];
 
 var activeCategoryIndex = null;
 
+var confirmInfo = new ConfirmInfo();
+
 var saveTestBackSteps = 1;
 
 var customTestParameters = {};

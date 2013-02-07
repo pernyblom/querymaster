@@ -211,6 +211,10 @@ function initTestingPageLogic(serverFound) {
             return;
         }
 
+        var $header = $testingPage.find("#testing-page-header");
+        $header.empty();
+        $header[0].innerHTML = _.escape(currentTestInfo.name);
+
         var $testContent = $("#test-content");
         test.runTest($testContent, function(err) {
 
@@ -616,10 +620,6 @@ function initDuplicateTestPageLogic(serverFound) {
             var toCopy = testInfos[info.testIndex];
             var copy = copyValueDeep(toCopy);
             copy.name = toCopy.name + " copy";
-//            console.log("Copied ");
-//            console.log(toCopy);
-//            console.log("Result ");
-//            console.log(copy);
             testInfos.push(copy);
         }
     });
@@ -628,25 +628,66 @@ function initDuplicateTestPageLogic(serverFound) {
 
 
 
+function initSettingsPageLogic(serverFound) {
+
+    var $settingsPage = $("#settings-page");
+
+    var $resetLocalStorageButton = $settingsPage.find("#reset-local-storage-button");
+
+    $resetLocalStorageButton.on('click', function() {
+        confirmInfo = new ConfirmInfo("Reset Local Storage",
+            "<p>This will remove all tests, categories and settings.</p>" +
+                "<p>Are you sure?</p>",
+            function() {
+                console.log("Resetting local storage...");
+            });
+    });
+}
+
+function initDynamicConfirmPageLogic(serverFound) {
+
+    var $confirmPage = $("#dynamic-confirm-page");
+
+    var $content = $confirmPage.find("#dynamic-confirm-content");
+    var $header = $confirmPage.find("#dynamic-confirm-header");
+
+    var $yesButton = $confirmPage.find("#dynamic-confirm-yes-button");
+    var $cancelButton = $confirmPage.find("#dynamic-confirm-cancel-button");
+
+
+    $confirmPage.on('pagebeforeshow', function(evt, data) {
+        $content.empty();
+        $content.append(confirmInfo.message);
+        $content.trigger("create");
+
+        $header.empty();
+        $header[0].innerHTML = confirmInfo.header;
+
+        $yesButton.off('click');
+        $yesButton.on('click', confirmInfo.yesActionFunction);
+    });
+
+}
+
 
 
 function initPageLogic(found) {
 
-    initTestsPageLogic(found);
-
-    initEditTestsPageLogic(found);
-
     initTestingPageLogic(found);
-
-    initNewTestPageLogic(found);
-
-    initEditTestParametersPageLogic(found);
 
     initAddCategoryPageLogic(found);
     initRenameCategoryPageLogic(found);
     initDeleteCategoryPageLogic(found);
 
+    initTestsPageLogic(found);
+    initEditTestsPageLogic(found);
+    initEditTestParametersPageLogic(found);
+    initNewTestPageLogic(found);
     initDeleteTestPageLogic(found);
     initMoveTestPageLogic(found);
     initDuplicateTestPageLogic(found);
+
+    initSettingsPageLogic(found);
+
+    initDynamicConfirmPageLogic(found);
 }

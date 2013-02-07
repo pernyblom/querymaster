@@ -14,6 +14,7 @@
     <script src="js/underscore.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/question.js"></script>
+    <script src="js/confirm_info.js"></script>
     <script src="js/answer_info.js"></script>
     <script src="js/test_info.js"></script>
     <script src="js/test_parameter.js"></script>
@@ -67,11 +68,40 @@
     <div data-role="header">
         <h1>Settings</h1>
     </div>
-
+    <div data-role="content">
+        <div data-role="collapsible" >
+            <h3>Interface</h3>
+        </div>
+        <div data-role="collapsible" >
+            <h3>Sound</h3>
+            <div data-role="fieldcontain">
+                <label for="slider">Sound effects volume:</label>
+                <input type="range" name="slider" id="slider" value="100" min="0" max="100" data-highlight="true"  />
+            </div>
+        </div>
+        <div data-role="collapsible" >
+            <h3>Advanced</h3>
+            <a id="reset-local-storage-button" href="#dynamic-confirm-page" data-role="button" >Reset Local Storage</a>
+        </div>
+    </div>
     <div data-role="content">
         <a href="#main-page" data-role="button" data-rel="back">Back</a>
     </div>
 </div>
+
+<div id="dynamic-confirm-page" data-role="page" >
+    <div data-role="header">
+        <h1 id="dynamic-confirm-header">Confirm</h1>
+    </div>
+    <div id="dynamic-confirm-content" data-role="content">
+        <span>Really do this?</span>
+    </div>
+    <div data-role="content">
+        <a id="dynamic-confirm-yes-button" href="#settings-page" data-role="button" data-rel="back">Yes</a>
+        <a id="dynamic-confirm-cancel-button" href="#settings-page" data-role="button" data-rel="back">Cancel</a>
+    </div>
+</div>
+
 
 <div id="tests-collections-page" data-role="page" class="normal-page">
     <div data-role="header">
@@ -152,10 +182,9 @@
 
 
 <div id="testing-page" data-role="page" class="normal-page">
-    <div id="testing-page-header" data-role="header">
-        <h1>Current test...</h1>
+    <div data-role="header">
+        <h1 id="testing-page-header">Header</h1>
     </div>
-
 
     <div data-role="content">
         <div id="test-content" data-role="content"></div>
