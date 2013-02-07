@@ -45,6 +45,7 @@ function findServer() {
 }
 
 
+
 $(document).ready(function() {
     // Initialize things before we know whether an advanced server exists or not
     initNotKnowServer();
@@ -53,5 +54,12 @@ $(document).ready(function() {
         initKnowWhetherServer(found);
     });
 
+    var urlParams = parseUrlParams();
+    language = urlParams['lang'] || "en";
+
+    localizeStatic();
+
+
     findServer();
 });
+

@@ -98,6 +98,9 @@ var saveTestBackSteps = 1;
 
 var customTestParameters = {};
 
+var language = "en";
+var localizationData = null;
+
 var hasServer = false;
 var serverDetectListeners = [];
 
