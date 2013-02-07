@@ -51,6 +51,13 @@ function getCategoryWithName(name) {
 }
 
 
+function compactTestInfos() {
+    for (var i=0; i<testsData.testCategories.length; i++) {
+        var cat = testsData.testCategories[i];
+        cat.testInfos = _.compact(cat.testInfos);
+    }
+}
+
 function categoryExists(name) {
     var idMap = getCategoryIdMap();
     return !!idMap[name];

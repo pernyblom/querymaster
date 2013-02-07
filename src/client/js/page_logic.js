@@ -144,17 +144,17 @@ function initEditTestsPageLogic(serverFound) {
             }
             if (count == 1) {
                 $editTestButton.removeClass('ui-disabled');
-                $duplicateTestButton.removeClass('ui-disabled');
             } else {
                 $editTestButton.addClass('ui-disabled');
-                $duplicateTestButton.addClass('ui-disabled');
             }
             if (count > 0) {
                 $deleteTestButton.removeClass('ui-disabled');
                 $moveTestButton.removeClass('ui-disabled');
+                $duplicateTestButton.removeClass('ui-disabled');
             } else {
                 $deleteTestButton.addClass('ui-disabled');
                 $moveTestButton.addClass('ui-disabled');
+                $duplicateTestButton.addClass('ui-disabled');
             }
         });
 
@@ -174,8 +174,10 @@ function initEditTestsPageLogic(serverFound) {
     $deleteTestButton.on('click', function() {
         activeTestIndexInfos = _.toArray(selectedTests);
     });
-
     $moveTestButton.on('click', function() {
+        activeTestIndexInfos = _.toArray(selectedTests);
+    });
+    $duplicateTestButton.on('click', function() {
         activeTestIndexInfos = _.toArray(selectedTests);
     });
 
@@ -523,10 +525,7 @@ function initDeleteTestPageLogic(serverFound) {
             var testInfos = cat.testInfos;
             testInfos[info.testIndex] = null;
         }
-        for (var i=0; i<testsData.testCategories.length; i++) {
-            var cat = testsData.testCategories[i];
-            cat.testInfos = _.compact(cat.testInfos);
-        }
+        compactTestInfos();
     });
 }
 
@@ -547,7 +546,7 @@ function initMoveTestPageLogic(serverFound) {
         ];
 
         htmlArr.push(
-            '<select class="move-tests-category-select">'
+            '<select id="move-tests-category-select">'
         );
 
         var categories = testsData.testCategories;
@@ -559,12 +558,73 @@ function initMoveTestPageLogic(serverFound) {
         htmlArr.push('</select>');
 
         $content.append($(htmlArr.join("")));
+
+        $content.trigger("create");
     });
 
     $moveButton.on('click', function() {
 
+        var categoryIndex = -1;
+
+        var $select = $content.find("#move-tests-category-select");
+        categoryIndex = $select[0].selectedIndex;
+
+        if (categoryIndex >= 0) {
+            var toMove = [];
+            for (var i=0; i<activeTestIndexInfos.length; i++) {
+                var info = activeTestIndexInfos[i];
+                var cat = testsData.testCategories[info.categoryIndex];
+                var testInfos = cat.testInfos;
+                toMove.push(testInfos[info.testIndex]);
+                testInfos[info.testIndex] = null;
+            }
+            var cat = testsData.testCategories[categoryIndex];
+            cat.testInfos = cat.testInfos.concat(toMove);
+            compactTestInfos();
+        }
     });
 }
+
+
+function initDuplicateTestPageLogic(serverFound) {
+
+    var $duplicateTestPage = $("#duplicate-test-page");
+
+    var $duplicateButton = $duplicateTestPage.find("#duplicate-test-confirm-button");
+    var $content = $duplicateTestPage.find("#duplicate-test-content");
+
+    $duplicateTestPage.on('pagebeforeshow', function(evt, data) {
+        $content.empty();
+
+        var count = activeTestIndexInfos.length;
+        var htmlArr = [
+            '<p>This will duplicate ' + count + ' ' + (count == 1 ? "test" : "tests") + '</p>',
+            '<p>Are you sure?</p>'
+        ];
+        $content.append($(htmlArr.join("")));
+
+        $content.trigger("create");
+    });
+
+    $duplicateButton.on('click', function() {
+
+        var toMove = [];
+        for (var i=0; i<activeTestIndexInfos.length; i++) {
+            var info = activeTestIndexInfos[i];
+            var cat = testsData.testCategories[info.categoryIndex];
+            var testInfos = cat.testInfos;
+            var toCopy = testInfos[info.testIndex];
+            var copy = copyValueDeep(toCopy);
+            copy.name = toCopy.name + " copy";
+//            console.log("Copied ");
+//            console.log(toCopy);
+//            console.log("Result ");
+//            console.log(copy);
+            testInfos.push(copy);
+        }
+    });
+}
+
 
 
 
@@ -588,4 +648,5 @@ function initPageLogic(found) {
 
     initDeleteTestPageLogic(found);
     initMoveTestPageLogic(found);
+    initDuplicateTestPageLogic(found);
 }
