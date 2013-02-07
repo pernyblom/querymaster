@@ -88,7 +88,9 @@ var currentTestInfo = null;
 
 var testInfoToEdit = null;
 
-var activeCategory = null;
+var activeTestIndexInfos = [];
+
+var activeCategoryIndex = null;
 
 var saveTestBackSteps = 1;
 

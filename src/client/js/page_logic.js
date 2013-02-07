@@ -125,7 +125,7 @@ function initEditTestsPageLogic(serverFound) {
         $renameAndDeleteButtons.on('click', function() {
             var $button = $(this);
             var catIndex = $button.data('category-index');
-            activeCategory = testsData.testCategories[catIndex];
+            activeCategoryIndex = catIndex;
         });
 
         var $testCheckboxes = $editTestsDiv.find(".edit-tests-page-test-cb");
@@ -145,16 +145,16 @@ function initEditTestsPageLogic(serverFound) {
             if (count == 1) {
                 $editTestButton.removeClass('ui-disabled');
                 $duplicateTestButton.removeClass('ui-disabled');
-                $moveTestButton.removeClass('ui-disabled');
             } else {
                 $editTestButton.addClass('ui-disabled');
                 $duplicateTestButton.addClass('ui-disabled');
-                $moveTestButton.addClass('ui-disabled');
             }
             if (count > 0) {
                 $deleteTestButton.removeClass('ui-disabled');
+                $moveTestButton.removeClass('ui-disabled');
             } else {
                 $deleteTestButton.addClass('ui-disabled');
+                $moveTestButton.addClass('ui-disabled');
             }
         });
 
@@ -166,9 +166,17 @@ function initEditTestsPageLogic(serverFound) {
     $editTestButton.on('click', function() {
         if (selectedTest) {
             testInfoToEdit = findTestInfo(selectedTest.categoryIndex, selectedTest.testIndex);
-            activeCategory = testsData.testCategories[selectedTest.categoryIndex];
+            activeCategoryIndex = selectedTest.categoryIndex;
             saveTestBackSteps = 1;
         }
+    });
+
+    $deleteTestButton.on('click', function() {
+        activeTestIndexInfos = _.toArray(selectedTests);
+    });
+
+    $moveTestButton.on('click', function() {
+        activeTestIndexInfos = _.toArray(selectedTests);
     });
 
 
@@ -254,7 +262,7 @@ function initNewTestPageLogic(serverFound) {
         var template = $newTestPage.find("#add-test-template-select").val();
 
         testInfoToEdit = new TestInfo();
-        activeCategory = null;
+        activeCategoryIndex = -1;
         saveTestBackSteps = 2;
         testInfoToEdit.template = template;
 
@@ -308,7 +316,7 @@ function initEditTestParametersPageLogic(serverFound) {
         }
 
         // Category select only when creating new test
-        if (!activeCategory) {
+        if (activeCategoryIndex == -1) {
 
             htmlArr.push(
                 '<div data-role="fieldcontain">',
@@ -350,8 +358,8 @@ function initEditTestParametersPageLogic(serverFound) {
     var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
     $saveButton.click(function() {
         var categoryName = "";
-        if (activeCategory) {
-            categoryName = activeCategory.name;
+        if (activeCategoryIndex >= 0) {
+            categoryName = testsData.testCategories[activeCategoryIndex].name;
         } else {
             categoryName = $("#add-test-category-select").val();
         }
@@ -429,6 +437,7 @@ function initRenameCategoryPageLogic(serverFound) {
     var okNames = {};
     var verifyOptions = {};
     $renameCategoryPage.on('pagebeforeshow', function(evt, data) {
+        var activeCategory = testsData.testCategories[activeCategoryIndex];
         okNames[activeCategory.name] = true;
         verifyOptions = {okNames: okNames, noErrorMessage: "Press 'Rename' to change the name of category '" + activeCategory.name + "'"};
         $categoryNameInput.val(activeCategory.name);
@@ -442,6 +451,7 @@ function initRenameCategoryPageLogic(serverFound) {
     $addButton.on('click', function() {
         var newName = $categoryNameInput.val().trim();
         if (categoryNameOk(newName, [], okNames)) {
+            var activeCategory = testsData.testCategories[activeCategoryIndex];
             activeCategory.name = newName;
         }
     });
@@ -457,6 +467,8 @@ function initDeleteCategoryPageLogic(serverFound) {
 
     $deleteCategoryPage.on('pagebeforeshow', function(evt, data) {
         $content.empty();
+        var activeCategory = testsData.testCategories[activeCategoryIndex];
+
         var htmlArr = [
             '<p>This will delete category "' + activeCategory.name + '"</p>'
         ];
@@ -477,12 +489,84 @@ function initDeleteCategoryPageLogic(serverFound) {
     });
 
     $deleteButton.on('click', function() {
-        var catIndex = getCategoryIndexWithName(activeCategory.name);
+        var catIndex = activeCategoryIndex;
         if (catIndex >= 0) {
             testsData.testCategories.splice(catIndex, 1);
         }
     });
 }
+
+
+function initDeleteTestPageLogic(serverFound) {
+
+    var $deleteTestPage = $("#delete-test-page");
+
+    var $deleteButton = $deleteTestPage.find("#delete-test-confirm-button");
+    var $content = $deleteTestPage.find("#delete-test-content");
+
+    $deleteTestPage.on('pagebeforeshow', function(evt, data) {
+        $content.empty();
+
+        var count = activeTestIndexInfos.length;
+        var htmlArr = [
+            '<p>This will delete ' + count + ' ' + (count == 1 ? "test" : "tests") + '</p>'
+        ];
+        htmlArr.push('<p>Are you sure about this?</p>');
+
+        $content.append($(htmlArr.join("")));
+    });
+
+    $deleteButton.on('click', function() {
+        for (var i=0; i<activeTestIndexInfos.length; i++) {
+            var info = activeTestIndexInfos[i];
+            var cat = testsData.testCategories[info.categoryIndex];
+            var testInfos = cat.testInfos;
+            testInfos[info.testIndex] = null;
+        }
+        for (var i=0; i<testsData.testCategories.length; i++) {
+            var cat = testsData.testCategories[i];
+            cat.testInfos = _.compact(cat.testInfos);
+        }
+    });
+}
+
+
+function initMoveTestPageLogic(serverFound) {
+
+    var $moveTestPage = $("#move-test-page");
+
+    var $moveButton = $moveTestPage.find("#move-test-confirm-button");
+    var $content = $moveTestPage.find("#move-test-content");
+
+    $moveTestPage.on('pagebeforeshow', function(evt, data) {
+        $content.empty();
+
+        var count = activeTestIndexInfos.length;
+        var htmlArr = [
+            '<p>Move ' + count + ' ' + (count == 1 ? "test" : "tests") + ' to category:</p>'
+        ];
+
+        htmlArr.push(
+            '<select class="move-tests-category-select">'
+        );
+
+        var categories = testsData.testCategories;
+        for (var i=0; i<categories.length; i++) {
+            var collection = categories[i];
+            htmlArr.push('<option value="' + collection.name + '">', collection.name, '</option>')
+        }
+
+        htmlArr.push('</select>');
+
+        $content.append($(htmlArr.join("")));
+    });
+
+    $moveButton.on('click', function() {
+
+    });
+}
+
+
 
 
 
@@ -501,4 +585,7 @@ function initPageLogic(found) {
     initAddCategoryPageLogic(found);
     initRenameCategoryPageLogic(found);
     initDeleteCategoryPageLogic(found);
+
+    initDeleteTestPageLogic(found);
+    initMoveTestPageLogic(found);
 }
