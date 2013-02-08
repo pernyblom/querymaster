@@ -298,7 +298,7 @@ function initEditTestParametersPageLogic(serverFound) {
         function addParamsHtml(params, htmlArr) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
-                param.getHtml(htmlArr);
+                param.getHtml(htmlArr, true);
             }
         }
 
