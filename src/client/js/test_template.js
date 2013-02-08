@@ -53,6 +53,7 @@ function findTemplate(name) {
 function TestTemplate(displayName, path) {
     this.displayName = displayName;
     this.localizationData = null;
+    this.supportedLanguages = {};
     this.path = path;
     this.description = "";
     this.parameters = []; // Shown before running test if not already set.
@@ -68,38 +69,35 @@ TestTemplate.prototype.addQuestions = function(test, testInfo) {
 
 TestTemplate.prototype.initializeLocalization = function(callback) {
     try {
-        var that = this;
-        $.ajax("test_templates/" + that.path + "/locale_" + language + ".json", {
-            complete: function(jqXhr, textStatus) {
-                if (textStatus == "success") {
-                    that.localizationData = $.parseJSON(jqXhr.responseText);
-                } else {
-                    console.log(that._constructorName + " could not find locale file for language " + language);
-                }
-                if (callback) {
+        if (this.supportedLanguages[language]) {
+            var that = this;
+            $.ajax("test_templates/" + that.path + "/locale_" + language + ".json", {
+                complete: function(jqXhr, textStatus) {
+                    if (textStatus == "success") {
+                        that.localizationData = $.parseJSON(jqXhr.responseText);
+                    } else {
+                        console.log(that._constructorName + " could not find locale file for language " + language);
+                    }
                     callback(null);
-                }
-            },
-            type: 'GET'});
+                },
+                type: 'GET'});
+        } else {
+            callback(null);
+        }
     } catch (exc) {
-        callback(exc);
+        callback(null);
     }
 };
 
 
 TestTemplate.prototype.initialize = function(callback) {
     if (!this.initialized) {
-        // Do things like load resources etc. here
-
-        // ... and then do the following when done:
-        this.initialized = true;
-        if (callback) {
-            callback(null); // Send any error through the callback
-        }
+        this.initializeLocalization(function(err) {
+            this.initialized = true;
+            callback(err);
+        });
     } else {
-        if (callback) {
-            callback(null);
-        }
+        callback(null);
     }
 };
 

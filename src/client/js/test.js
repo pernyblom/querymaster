@@ -39,7 +39,6 @@ Test.prototype.getNextQuestion = function() {
     return null;
 };
 Test.prototype.evaluateAnswer = function(question) {
-    var answerInfo = question.evaluateAnswer();
 };
 Test.prototype.runTest = function($testContent, callback) {
     this.doneCallback = callback;
@@ -203,8 +202,8 @@ function FixedLengthTest(template, testInfo) {
     this.questionsPerScreen = 1;
     this.answerInfos = [];
     this.parameters = [
-        new TestParameter("Question Count", "questionCount", TestParameterType.RANGED_INTEGER, 10, {range: [1, 100]}),
-        new TestParameter("Questions Per Screen", "questionsPerScreen", TestParameterType.RANGED_INTEGER, 5, {range: [1, 10]})
+        new TestParameter("question-count", "questionCount", TestParameterType.RANGED_INTEGER, 10, {range: [1, 100]}, null, template),
+        new TestParameter("questions-per-screen", "questionsPerScreen", TestParameterType.RANGED_INTEGER, 5, {range: [1, 10]}, null, template)
     ];
 
 }
@@ -235,7 +234,7 @@ FixedLengthTest.prototype.initializeQuestionsInDom = function($aParent) {
         that.answerInfos = [];
         for (var i=0; i<questionCount; i++) {
             var q = that.questions[i + that.questionIndex];
-            var answerInfo = q.evaluateAnswer();
+            var answerInfo = q.evaluateAnswer($aParent, that);
             that.answerInfos.push(answerInfo);
             that.correctFraction += answerInfo.correctFraction;
             that.totalFraction += 1;

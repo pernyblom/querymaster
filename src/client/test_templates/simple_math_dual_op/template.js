@@ -4,16 +4,6 @@ function SimpleMathDualOperationTemplate(path) {
 }
 SimpleMathDualOperationTemplate.prototype = new TestTemplate();
 
-// This is how to load a local localization in a test template
-//
-//SimpleMathDualOperationTemplate.prototype.initialize = function(callback) {
-//    if (!this.initialized) {
-//        this.initialized = true;
-//        this.initializeLocalization(callback);
-//    } else {
-//        callback(null);
-//    }
-//};
 
 SimpleMathDualOperationTemplate.prototype.addQuestions = function(test, testInfo) {
     var parameterValues = testInfo.parameterValues;

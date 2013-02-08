@@ -14,13 +14,14 @@ var TestParameterType = {
 };
 
 
-function TestParameter(displayName, propertyName, type, defaultValue, data, verifiers) {
-    this.displayName = displayName || "parameter name";
+function TestParameter(displayLocProperty, propertyName, type, defaultValue, data, verifiers, template) {
+    this.displayName = displayLocProperty || "parameter name";
     this.propertyName = propertyName || "parameterName";
     this.type = type || TestParameterType.INTEGER;
     this.defaultValue = defaultValue || 0; // Can be anything
     this.data = data; // Can describe range, enumerations etc.
     this.verifiers = verifiers || [];
+    this.template = template;
 }
 
 TestParameter.prototype.getHtml = function(arr) {
@@ -37,8 +38,9 @@ TestParameter.prototype.getHtml = function(arr) {
     }
     arr.push('<div data-role="fieldcontain">');
     if (useInput) {
+        var displayName = localizePropertyWithFallbackCap(this.displayName, this.displayName, this.template.localizationData, localizationData);
         arr.push(
-            '<label for="' + inputId + '" >', this.displayName, '</label>',
+            '<label for="' + inputId + '" >', displayName, '</label>',
             '<input type="' + inputType + '" id="' + inputId + '" value="' + this.defaultValue + '" />');
     }
     arr.push('</div>');

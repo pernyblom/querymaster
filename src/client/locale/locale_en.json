@@ -1,7 +1,7 @@
 {
     "run-tests": "Run Tests",
     "edit-tests": "Edit Tests",
-    "settings": "Settings",
-    "account": "Account",
-    "help": "Help"
+    "settings": "settings",
+    "account": "account",
+    "help": "help"
 }

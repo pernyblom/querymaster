@@ -1,5 +1,6 @@
 function SimpleGlossaryTemplate(path) {
     TestTemplate.call(this, "Simple Glossary", path);
+    this.supportedLanguages = {"sv": true};
     this._constructorName = "SimpleGlossaryTemplate";
 }
 SimpleGlossaryTemplate.prototype = new TestTemplate();
@@ -28,7 +29,11 @@ SimpleGlossaryTemplate.prototype.addQuestions = function(test, testInfo) {
         var correct = pair[1];
         q.inputType = "text";
         q.correctAnswers.push("" + correct);
-        q.questionTexts = ["Translate '" + pair[0] + "' to " + parameterValues.languages[1]];
+        q.questionTexts = [
+            localizePropertyCap('translate', "translate", this.localizationData) +
+                " '" + pair[0] + "' " +
+                localizeProperty('into', "into", this.localizationData) +
+                " " + parameterValues.languages[1]];
         questions.push(q);
     }
     test.questions = questions;
