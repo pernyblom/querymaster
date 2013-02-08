@@ -11,6 +11,7 @@ var testsData = {
             testInfos: [
                 {
                     name: "Glossary I",
+                    description: "A simple glossary test for English and Swedish",
                     template: "SimpleGlossaryTemplate",
                     parameterValues: {
                         pairs: [["horse", "häst"], ["cat", "katt"], ["dog", "hund"], ["bird", "fågel"], ["mouse", "mus"]],

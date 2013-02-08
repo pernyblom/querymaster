@@ -288,6 +288,9 @@ function initEditTestParametersPageLogic(serverFound) {
 
     var $editTestParametersPage = $("#edit-test-parameters-page");
 
+    var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
+    var $saveButtonSpan = $editTestParametersPage.find("#save-button-span");
+
     $editTestParametersPage.on('pagebeforeshow', function(evt, data) {
 
         var htmlArr = [];
@@ -304,7 +307,22 @@ function initEditTestParametersPageLogic(serverFound) {
         var testParams = [];
 
         if (testInfoToEdit) {
-            console.log('Using template ' + testInfoToEdit.template);
+//            console.log('Using template ' + testInfoToEdit.template);
+
+            htmlArr.push(
+                '<div data-role="fieldcontain">',
+                '<label for="test-parameters-name-input" >Name</label>',
+                '<input id="test-parameters-name-input" value="' + _.escape(testInfoToEdit.name) + '" />',
+                '</div>'
+            );
+            htmlArr.push(
+                '<div data-role="fieldcontain">',
+                '<label for="test-parameters-description-input" >Description</label>',
+                '<textarea id="test-parameters-description-input" style="height: 7em;" >',
+                _.escape(testInfoToEdit.description),
+                '</textarea>',
+                '</div>'
+            );
 
             var template = findTemplate(testInfoToEdit.template);
             if (template) {
@@ -349,7 +367,6 @@ function initEditTestParametersPageLogic(serverFound) {
 
         $content.append($(htmlArr.join("")));
 
-
         // Initialize all the params in the DOM
         function initializeParamsInDom(params) {
             for (var i=0; i<params.length; i++) {
@@ -361,10 +378,15 @@ function initEditTestParametersPageLogic(serverFound) {
         initializeParamsInDom(templateDataParams);
         initializeParamsInDom(testParams);
 
+        if (saveTestBackSteps == 2) {
+            $saveButtonSpan[0].innerHTML = localizePropertyCap('add', "Add");
+        } else {
+            $saveButtonSpan[0].innerHTML = localizePropertyCap('save', "Save");
+        }
+
         $content.trigger("create");
     });
 
-    var $saveButton = $editTestParametersPage.find("#edit-test-parameters-save-button");
     $saveButton.click(function() {
         var categoryName = "";
         if (activeCategoryIndex >= 0) {
@@ -373,6 +395,10 @@ function initEditTestParametersPageLogic(serverFound) {
             categoryName = _.unescape($("#add-test-category-select").val());
         }
         console.log("Saving in category " + categoryName);
+
+        if (saveTestBackSteps == 2) {
+            // Add test
+        }
 
         window.history.go(-saveTestBackSteps);
     });
